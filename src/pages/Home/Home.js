@@ -12,6 +12,7 @@ export default function Home(props) {
 
     return (
         <div className="home">
+            <h1>Home</h1>
             <FeatureInfo />
             <Chart data={userData} title="User Analytics" grid dataKey="Active User" />
             <div className="homeWidgets">

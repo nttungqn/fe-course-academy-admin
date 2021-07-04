@@ -1,7 +1,7 @@
 import Topbar from './components/Topbar/Topbar';
 import Sidebar from './components/Sidebar/Sidebar';
 import Home from './pages/Home/Home';
-import UserList from './pages/UserList/UserList'
+import UserList from './pages/UserList/UserList';
 import User from './pages/User/User';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
@@ -21,7 +21,7 @@ function App() {
           <Route path='/users'>
             <UserList />
           </Route>
-          <Route path='/users/:userId'>
+          <Route path="/user/:userId">
             <User />
           </Route>
         </Switch>
