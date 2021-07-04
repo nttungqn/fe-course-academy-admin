@@ -1,98 +1,99 @@
 import "./Sidebar.css";
 import {
-    LineStyle,
-    Timeline,
-    TrendingUp,
+    Add,
     PermIdentity,
-    Storefront,
-    AttachMoney,
-    BarChart,
-    MailOutline,
-    DynamicFeed,
-    ChatBubbleOutline,
-    WorkOutline,
-    Report,
+    Dashboard,
+    VideoLibrary,
+    Assignment,
+    LibraryBooks
 } from "@material-ui/icons";
+
+import { Link } from 'react-router-dom';
 
 export default function Sidebar() {
     return (
         <div className="sidebar">
             <div className="sidebarWrapper">
                 <div className="sidebarMenu">
-                    <h3 className="sidebarTitle">Dashboard</h3>
+                    <h3 className="sidebarTitle">Home</h3>
                     <ul className="sidebarList">
-
-                        <li className="sidebarListItem active">
-                            <LineStyle className="sidebarIcon" />
-                            Home
-                        </li>
-                        <li className="sidebarListItem">
-                            <Timeline className="sidebarIcon" />
-                            Analytics
-                        </li>
-                        <li className="sidebarListItem">
-                            <TrendingUp className="sidebarIcon" />
-                            Sales
-                        </li>
+                        <Link to='/' className="link">
+                            <li className="sidebarListItem active">
+                                <Dashboard className="sidebarIcon" />
+                                Dashboard
+                            </li>
+                        </Link>
                     </ul>
                 </div>
                 <div className="sidebarMenu">
-                    <h3 className="sidebarTitle">Quick Menu</h3>
+                    <h3 className="sidebarTitle">User Management</h3>
                     <ul className="sidebarList">
-
-                        <li className="sidebarListItem">
-                            <PermIdentity className="sidebarIcon" />
-                            Users
-                        </li>
-                        <li className="sidebarListItem">
-                            <Storefront className="sidebarIcon" />
-                            Products
-                        </li>
-                        <li className="sidebarListItem">
-                            <AttachMoney className="sidebarIcon" />
-                            Transactions
-                        </li>
-                        <li className="sidebarListItem">
-                            <BarChart className="sidebarIcon" />
-                            Reports
-                        </li>
+                        <Link to='/users' className="link">
+                            <li className="sidebarListItem">
+                                <PermIdentity className="sidebarIcon" />
+                                User List
+                            </li>
+                        </Link>
+                        <Link to='/users/add-new-user' className="link">
+                            <li className="sidebarListItem">
+                                <Add className="sidebarIcon" />
+                                Add New User
+                            </li>
+                        </Link>
                     </ul>
                 </div>
                 <div className="sidebarMenu">
-                    <h3 className="sidebarTitle">Notifications</h3>
+                    <h3 className="sidebarTitle">Course Management</h3>
                     <ul className="sidebarList">
-                        <li className="sidebarListItem">
-                            <MailOutline className="sidebarIcon" />
-                            Mail
-                        </li>
-                        <li className="sidebarListItem">
-                            <DynamicFeed className="sidebarIcon" />
-                            Feedback
-                        </li>
-                        <li className="sidebarListItem">
-                            <ChatBubbleOutline className="sidebarIcon" />
-                            Messages
-                        </li>
+                        <Link to='/courses' className="link">
+                            <li className="sidebarListItem">
+                                <LibraryBooks className="sidebarIcon" />
+                                Course List
+                            </li>
+                        </Link>
+                        <Link to='/courses/add-new-course' className="link">
+                            <li className="sidebarListItem">
+                                <Add className="sidebarIcon" />
+                                Add New Course
+                            </li>
+                        </Link>
                     </ul>
                 </div>
                 <div className="sidebarMenu">
-                    <h3 className="sidebarTitle">Staff</h3>
+                    <h3 className="sidebarTitle">Document Management</h3>
                     <ul className="sidebarList">
-                        <li className="sidebarListItem">
-                            <WorkOutline className="sidebarIcon" />
-                            Manage
-                        </li>
-                        <li className="sidebarListItem">
-                            <Timeline className="sidebarIcon" />
-                            Analytics
-                        </li>
-                        <li className="sidebarListItem">
-                            <Report className="sidebarIcon" />
-                            Reports
-                        </li>
+                        <Link to='/documents' className="link">
+                            <li className="sidebarListItem">
+                                <Assignment className="sidebarIcon" />
+                                Document List
+                            </li>
+                        </Link>
+                        <Link to='/documents/add-new-document' className="link">
+                            <li className="sidebarListItem">
+                                <Add className="sidebarIcon" />
+                                Add Document
+                            </li>
+                        </Link>
+                    </ul>
+                </div>
+                <div className="sidebarMenu">
+                    <h3 className="sidebarTitle">Video Management</h3>
+                    <ul className="sidebarList">
+                        <Link to='/videos' className="link">
+                            <li className="sidebarListItem">
+                                <VideoLibrary className="sidebarIcon" />
+                                Video List
+                            </li>
+                        </Link>
+                        <Link to='/videos/add-new-video' className="link">
+                            <li className="sidebarListItem">
+                                <Add className="sidebarIcon" />
+                                Add New Video
+                            </li>
+                        </Link>
                     </ul>
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
