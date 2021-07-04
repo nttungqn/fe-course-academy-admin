@@ -1,23 +1,17 @@
-import logo from './logo.svg';
+import Topbar from './components/Topbar/Topbar';
+import Sidebar from './components/Sidebar/Sidebar';
+import Home from './pages/Home/Home';
+
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Topbar />
+      <div className="container">
+        <Sidebar />
+        <Home />
+      </div>
     </div>
   );
 }
