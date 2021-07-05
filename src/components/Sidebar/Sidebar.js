@@ -15,7 +15,7 @@ export default function Sidebar() {
         <div className="sidebar">
             <div className="sidebarWrapper">
                 <div className="sidebarMenu">
-                    <h3 className="sidebarTitle">Home</h3>
+                    <h3 className="sidebarTitle">Dashboard</h3>
                     <ul className="sidebarList">
                         <Link to='/' className="link">
                             <li className="sidebarListItem active">

@@ -1,6 +1,6 @@
 import Topbar from './components/Topbar/Topbar';
 import Sidebar from './components/Sidebar/Sidebar';
-import Home from './pages/Home/Home';
+import Dashboard from './pages/Dashboard/Dashboard';
 import UserList from './pages/UserList/UserList';
 import User from './pages/User/User';
 import NewUser from './pages/NewUser/NewUser';
@@ -20,7 +20,7 @@ function App() {
         <Sidebar />
         <Switch >
           <Route exact path='/'>
-            <Home />
+            <Dashboard />
           </Route>
           <Route path='/users'>
             <UserList />

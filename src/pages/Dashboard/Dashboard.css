@@ -1,4 +1,4 @@
-.home {
+.dashboard {
   flex: 4;
 }
 
@@ -6,7 +6,7 @@ h1 {
   margin: 20px;
 }
 
-.homeWidgets {
+.dashboardWidgets {
   display: flex;
   margin: 20px;
 }

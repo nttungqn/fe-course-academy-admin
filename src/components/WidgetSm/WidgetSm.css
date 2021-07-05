@@ -35,6 +35,12 @@
 .widgetSmUser {
   display: flex;
   flex-direction: column;
+  margin-left: 20px;
+}
+
+.widgetSmGroup {
+  display: flex;
+  flex-direction: row;
 }
 
 .widgetSmUsername {

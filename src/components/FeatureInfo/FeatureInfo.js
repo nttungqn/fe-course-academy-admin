@@ -1,40 +1,63 @@
-import React from 'react'
-import { ArrowDownward, ArrowUpward } from '@material-ui/icons'
+import React, { useEffect, useState } from 'react'
+import {
+    PersonOutline,
+    LibraryBooks,
+    FlashOn
+} from '@material-ui/icons'
+import { axiosInstance } from './../../utils/axios'
 
 import './FeatureInfo.css'
 
 export default function FeatureInfo() {
+    const [numStudents, setNumStudents] = useState(0);
+    const [numCourses, setNumCourses] = useState(0);
+    const [numTrans, setNumTrans] = useState(0);
+
+    useEffect(function () {
+        async function loadNumberStudents() {
+            const res = await axiosInstance.get(`/users?role_id=3&limit=999`);
+            setNumStudents(res.data.length);
+        }
+
+        async function loadNumberCourses() {
+            const res = await axiosInstance.get(`/courses?limit=999`);
+            setNumCourses(res.data.length);
+        }
+
+        async function loadNumberTransaction() {
+            const res = await axiosInstance.get('/course_order?limit=999');
+            setNumTrans(res.data.length);
+        }
+
+        loadNumberStudents();
+        loadNumberCourses();
+        loadNumberTransaction();
+    }, []);
+
     return (
         <div className="featured">
             <div className="featuredItem">
-                <span className="featuredTitle">Revanue</span>
-                <div className="featuredMoneyContainer">
-                    <span className="featuredMoney">$2,415</span>
-                    <span className="featuredMoneyRate">
-                        -11.4 <ArrowDownward className="featuredIcon negative" />
-                    </span>
+                <span className="featuredTitle">Students</span>
+                <div className="featuredCardContainer">
+                    <span className="featuredNumber">{numStudents}</span>
+                    <PersonOutline fontSize='large' />
                 </div>
-                <span className="featuredSub">Compared to last month</span>
+
             </div>
             <div className="featuredItem">
-                <span className="featuredTitle">Sales</span>
-                <div className="featuredMoneyContainer">
-                    <span className="featuredMoney">$4,415</span>
-                    <span className="featuredMoneyRate">
-                        -1.4 <ArrowDownward className="featuredIcon negative" />
-                    </span>
+                <span className="featuredTitle">Courses</span>
+                <div className="featuredCardContainer">
+                    <span className="featuredNumber">{numCourses}</span>
+                    <LibraryBooks fontSize='large' />
                 </div>
-                <span className="featuredSub">Compared to last month</span>
+
             </div>
             <div className="featuredItem">
-                <span className="featuredTitle">Cost</span>
-                <div className="featuredMoneyContainer">
-                    <span className="featuredMoney">$2,225</span>
-                    <span className="featuredMoneyRate">
-                        +2.4 <ArrowUpward className="featuredIcon" />
-                    </span>
+                <span className="featuredTitle">Transactions</span>
+                <div className="featuredCardContainer">
+                    <span className="featuredNumber">{numTrans}</span>
+                    <FlashOn fontSize='large' />
                 </div>
-                <span className="featuredSub">Compared to last month</span>
             </div>
         </div>
     );
