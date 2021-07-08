@@ -33,7 +33,7 @@ export default function WidgetSm() {
                                 />
                                 <div className="widgetSmUser">
                                     <span className="widgetSmUsername">{el.user.fullname}</span>
-                                    <span className="widgetSmUserTitle">{el.role.name}</span>
+                                    <span className="widgetSmUserTitle">{el.role.name && el.role.name[0].toUpperCase() + el.role.name.slice(1)}</span>
                                 </div>
 
                             </div>

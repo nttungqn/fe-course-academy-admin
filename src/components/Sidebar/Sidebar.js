@@ -1,6 +1,6 @@
 import "./Sidebar.css";
 import {
-    Add,
+    // Add,
     PermIdentity,
     Dashboard,
     VideoLibrary,
@@ -26,7 +26,7 @@ export default function Sidebar() {
                     </ul>
                 </div>
                 <div className="sidebarMenu">
-                    <h3 className="sidebarTitle">User Management</h3>
+                    <h3 className="sidebarTitle">Management</h3>
                     <ul className="sidebarList">
                         <Link to='/users' className="link">
                             <li className="sidebarListItem">
@@ -34,15 +34,33 @@ export default function Sidebar() {
                                 User List
                             </li>
                         </Link>
-                        <Link to='/users/add-new-user' className="link">
+                        {/* <Link to='/users/add-new-user' className="link">
                             <li className="sidebarListItem">
                                 <Add className="sidebarIcon" />
                                 Add New User
                             </li>
+                        </Link> */}
+                        <Link to='/courses' className="link">
+                            <li className="sidebarListItem">
+                                <LibraryBooks className="sidebarIcon" />
+                                Course List
+                            </li>
+                        </Link>
+                        <Link to='/documents' className="link">
+                            <li className="sidebarListItem">
+                                <Assignment className="sidebarIcon" />
+                                Document List
+                            </li>
+                        </Link>
+                        <Link to='/videos' className="link">
+                            <li className="sidebarListItem">
+                                <VideoLibrary className="sidebarIcon" />
+                                Video List
+                            </li>
                         </Link>
                     </ul>
                 </div>
-                <div className="sidebarMenu">
+                {/* <div className="sidebarMenu">
                     <h3 className="sidebarTitle">Course Management</h3>
                     <ul className="sidebarList">
                         <Link to='/courses' className="link">
@@ -92,7 +110,7 @@ export default function Sidebar() {
                             </li>
                         </Link>
                     </ul>
-                </div>
+                </div> */}
             </div>
         </div >
     );
