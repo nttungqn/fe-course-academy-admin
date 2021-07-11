@@ -3,7 +3,7 @@ import axios from 'axios';
 export const axiosInstance = axios.create({
     baseURL: 'http://localhost:5000/api',
     timeout: 5000,
-    // headers: {
-    //   'X-Access-Token': 'accessToken'
-    // }
+    headers: {
+        //   'X-Access-Token': 'accessToken'
+    }
 })

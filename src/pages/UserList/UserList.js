@@ -1,10 +1,11 @@
 import "./UserList.css";
 import { DataGrid } from "@material-ui/data-grid";
-import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { ButtonCreate } from './../../components/ButtonCreate/ButtonCreate'
 import { axiosInstance } from "../../utils/axios";
+
+import EditUser from './../EditUser/EditUser';
 
 const useStyles = makeStyles({
 
@@ -16,6 +17,8 @@ const useStyles = makeStyles({
 export default function UserList() {
     const classes = useStyles();
     const [data, setData] = useState([]);
+    const [editId, setEditId] = useState(null);
+    const [showDialog, setShowDialog] = useState(false);
 
     useEffect(function () {
         async function loadNewMembers() {
@@ -26,7 +29,6 @@ export default function UserList() {
                     delete el['role'];
                     return el['user'];
                 });
-                console.log(users);
                 setData(users);
             }
         }
@@ -36,6 +38,11 @@ export default function UserList() {
 
     const handleDelete = (id) => {
         setData(data.filter((item) => item.id !== id));
+    };
+
+    const handleEdit = (id) => {
+        setEditId(id);
+        setShowDialog(true);
     };
 
     const columns = [
@@ -76,9 +83,10 @@ export default function UserList() {
             renderCell: (params) => {
                 return (
                     <>
-                        <Link to={"/user/" + params.row.id}>
-                            <button className="buttonEdit">Edit</button>
-                        </Link>
+                        <button className="buttonEdit" variant="contained"
+                            onClick={() => handleEdit(params.row.id)}>Edit
+                        </button>
+
                         <button className="buttonDelete" variant="contained"
                             onClick={() => handleDelete(params.row.id)}>Delete
                         </button>
@@ -103,7 +111,9 @@ export default function UserList() {
     return (
         <div className="userList">
             <h1>User List</h1>
-            <ButtonCreate link="/user/create-new-user" name="Create new user"></ButtonCreate>
+            <ButtonCreate link="/user/create-new-user" name="Create new user">
+
+            </ButtonCreate>
             <DataGrid className={classes.dataGrid}
                 rows={data}
                 disableSelectionOnClick
@@ -111,7 +121,27 @@ export default function UserList() {
                 pageSize={8}
                 checkboxSelection
                 autoHeight={true}
-            />
+            >
+
+            </DataGrid>
+            {/* <Dialog open={true} onClose={handleClose} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+                <DialogContent>
+                    <User id={id} />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">
+                        Cancel
+                    </Button>
+                    <Button onClick={handleClose} color="primary">
+                        Subscribe
+                    </Button>
+                </DialogActions>
+            </Dialog> */}
+            {showDialog && <EditUser id={editId} toggle={() => setShowDialog(false)} />}
+
         </div>
     );
+
+
 }

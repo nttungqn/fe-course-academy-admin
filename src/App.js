@@ -2,7 +2,6 @@ import Topbar from './components/Topbar/Topbar';
 import Sidebar from './components/Sidebar/Sidebar';
 import Dashboard from './pages/Dashboard/Dashboard';
 import UserList from './pages/UserList/UserList';
-import User from './pages/User/User';
 import NewUser from './pages/NewUser/NewUser';
 import ProductList from './pages/ProductList/ProductList';
 import Product from './pages/Product/Product';
@@ -22,12 +21,9 @@ function App() {
           <Route exact path='/'>
             <Dashboard />
           </Route>
-          <Route path='/users'>
-            <UserList />
+          <Route path='/users' component={UserList}>
           </Route>
-          <Route path="/user/:userId">
-            <User />
-          </Route>
+          {/* <Route path="/user/:id" render={(props) => <User {...props} />} /> */}
           <Route path="/newUser">
             <NewUser />
           </Route>

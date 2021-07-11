@@ -1,13 +1,10 @@
 import "./WidgetSm.css";
-import { Visibility } from "@material-ui/icons";
 import { useEffect, useState } from "react";
 
 import { axiosInstance } from "../../utils/axios";
-import { useHistory } from "react-router-dom";
 
 export default function WidgetSm() {
     const [members, setMembers] = useState([]);
-    const { push } = useHistory();
 
     useEffect(function () {
         async function loadNewMembers() {
@@ -38,10 +35,10 @@ export default function WidgetSm() {
 
                             </div>
 
-                            <button className="widgetSmButton" type="button" onClick={() => push('/users/' + el.user.id)} >
+                            {/* <button className="widgetSmButton" type="button" onClick={() => push('/users/' + el.user.id)} >
                                 <Visibility className="widgetSmIcon" />
                                 Display
-                            </button>
+                            </button> */}
 
                         </li>
                     );
