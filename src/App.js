@@ -2,12 +2,8 @@ import Topbar from './components/Topbar/Topbar';
 import Sidebar from './components/Sidebar/Sidebar';
 import Dashboard from './pages/Dashboard/Dashboard';
 import UserList from './pages/UserList/UserList';
-import NewUser from './pages/NewUser/NewUser';
 import ProductList from './pages/ProductList/ProductList';
-import Product from './pages/Product/Product';
-import NewProduct from './pages/NewProduct/NewProduct';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-
 
 import './App.css';
 
@@ -23,18 +19,8 @@ function App() {
           </Route>
           <Route path='/users' component={UserList}>
           </Route>
-          {/* <Route path="/user/:id" render={(props) => <User {...props} />} /> */}
-          <Route path="/newUser">
-            <NewUser />
-          </Route>
           <Route path='/products'>
             <ProductList />
-          </Route>
-          <Route path="/product/:productId">
-            <Product />
-          </Route>
-          <Route path="/newProduct">
-            <NewProduct />
           </Route>
         </Switch>
       </div>

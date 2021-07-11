@@ -15,7 +15,7 @@ export default function FeatureInfo() {
 
     useEffect(function () {
         async function loadNumberStudents() {
-            const res = await axiosInstance.get(`/users?role_id=3&limit=999`);
+            const res = await axiosInstance.get(`/users?role_id=2&is_delete=false&limit=999`);
             setNumStudents(res.data.length);
         }
 

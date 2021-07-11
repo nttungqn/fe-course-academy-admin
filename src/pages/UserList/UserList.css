@@ -16,6 +16,10 @@
   margin-right: 10px;
 }
 
+.buttonCreate {
+  margin-bottom: 30px;
+}
+
 .buttonEdit {
   border: none;
   border-radius: 10px;

@@ -2,27 +2,31 @@ import "./UserList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { ButtonCreate } from './../../components/ButtonCreate/ButtonCreate'
 import { axiosInstance } from "../../utils/axios";
 
 import EditUser from './../EditUser/EditUser';
+import NewUser from './../NewUser/NewUser';
+import { Button } from "@material-ui/core";
+import { withSnackbar } from "notistack";
 
 const useStyles = makeStyles({
 
     dataGrid: {
-        width: "100%"
+        width: "100%",
+        marginTop: '30px'
     },
 });
 
-export default function UserList() {
+function UserList(props) {
     const classes = useStyles();
     const [data, setData] = useState([]);
     const [editId, setEditId] = useState(null);
-    const [showDialog, setShowDialog] = useState(false);
+    const [showEditDialog, setShowEditDialog] = useState(false);
+    const [showAddDialog, setShowAddDialog] = useState(false);
 
     useEffect(function () {
         async function loadNewMembers() {
-            const res = await axiosInstance.get('/users?limit=999&sort_type=asc');
+            const res = await axiosInstance.get('/users?is_delete=false&limit=999&sort_type=asc');
             if (res.data.users) {
                 let users = res.data.users.map((el) => {
                     el['user']['role'] = el['role'];
@@ -36,14 +40,31 @@ export default function UserList() {
         loadNewMembers();
     }, []);
 
-    const handleDelete = (id) => {
+    const handleDelete = async (id) => {
         setData(data.filter((item) => item.id !== id));
+        try {
+            const res = await axiosInstance.delete(`/users/${id}`);
+            console.log(data)
+            if (res.status === 200) {
+                props.enqueueSnackbar('Successfully deleted user', { variant: 'success' });
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+
+        } catch (err) {
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
     };
 
     const handleEdit = (id) => {
         setEditId(id);
-        setShowDialog(true);
+        setShowEditDialog(true);
     };
+
+    const handleCreate = () => {
+        console.log('Button clicked')
+        setShowAddDialog(true);
+    }
 
     const columns = [
         { field: "id", headerName: "ID", flex: 0.15 },
@@ -111,9 +132,9 @@ export default function UserList() {
     return (
         <div className="userList">
             <h1>User List</h1>
-            <ButtonCreate link="/user/create-new-user" name="Create new user">
-
-            </ButtonCreate>
+            <Button className='buttonCreate' variant="contained" color="primary" onClick={() => handleCreate()}>
+                Create new user
+            </Button>
             <DataGrid className={classes.dataGrid}
                 rows={data}
                 disableSelectionOnClick
@@ -138,10 +159,14 @@ export default function UserList() {
                     </Button>
                 </DialogActions>
             </Dialog> */}
-            {showDialog && <EditUser id={editId} toggle={() => setShowDialog(false)} />}
+            {showEditDialog && <EditUser id={editId} toggle={() => setShowEditDialog(false)} />}
+            {showAddDialog && <NewUser toggle={() => setShowAddDialog(false)} />}
 
-        </div>
+
+        </div >
     );
 
 
 }
+
+export default withSnackbar(UserList);
