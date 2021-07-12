@@ -5,7 +5,8 @@ import {
     Dashboard,
     VideoLibrary,
     Assignment,
-    LibraryBooks
+    LibraryBooks,
+    Category
 } from "@material-ui/icons";
 
 import { Link } from 'react-router-dom';
@@ -31,7 +32,7 @@ export default function Sidebar() {
                         <Link to='/users' className="link">
                             <li className="sidebarListItem">
                                 <PermIdentity className="sidebarIcon" />
-                                User List
+                                User
                             </li>
                         </Link>
                         {/* <Link to='/users/add-new-user' className="link">
@@ -56,6 +57,12 @@ export default function Sidebar() {
                             <li className="sidebarListItem">
                                 <VideoLibrary className="sidebarIcon" />
                                 Video
+                            </li>
+                        </Link>
+                        <Link to='/categories' className="link">
+                            <li className="sidebarListItem">
+                                <Category className="sidebarIcon" />
+                                Category
                             </li>
                         </Link>
                     </ul>

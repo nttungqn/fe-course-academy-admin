@@ -1,0 +1,8 @@
+.categoryList {
+  flex: 4;
+  width: 100%;
+}
+.listItem {
+  display: flex;
+  align-items: center;
+}

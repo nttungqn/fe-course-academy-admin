@@ -63,7 +63,7 @@ function CourseList(props) {
     };
 
     const handleCreate = () => {
-        console.log('Button clicked')
+
         setShowAddDialog(true);
     }
 
@@ -137,7 +137,6 @@ function CourseList(props) {
 
             {showEditDialog && <EditCourse id={editId} toggle={() => setShowEditDialog(false)} />}
             {showAddDialog && <NewCourse toggle={() => setShowAddDialog(false)} />}
-
 
         </div >
     );
