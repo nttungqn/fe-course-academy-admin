@@ -12,6 +12,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import moment from 'moment';
 import { withSnackbar } from 'notistack';
+import { DEFAULT_AVATAR } from '../../config';
 
 const genders = [
     {
@@ -72,6 +73,7 @@ function NewUser(props) {
         phone: '',
         gender: 0,
         password: '',
+        avatar: DEFAULT_AVATAR,
         date_of_birth: moment().format('YYYY-MM-DD'),
     };
     const [open, setOpen] = useState(false);
@@ -132,7 +134,7 @@ function NewUser(props) {
         >
             {({ values, errors, dirty, isValid, handleChange, handleReset }) => (
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Add User</DialogTitle>
+                    <DialogTitle id="form-dialog-title">Add New Teacher</DialogTitle>
                     <DialogContent>
 
                         <form form className={classes.root} noValidate autoComplete="off">

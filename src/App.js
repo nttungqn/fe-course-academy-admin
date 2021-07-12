@@ -2,7 +2,7 @@ import Topbar from './components/Topbar/Topbar';
 import Sidebar from './components/Sidebar/Sidebar';
 import Dashboard from './pages/Dashboard/Dashboard';
 import UserList from './pages/UserList/UserList';
-import ProductList from './pages/ProductList/ProductList';
+import CourseList from './pages/CourseList/CourseList';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './App.css';
@@ -17,10 +17,11 @@ function App() {
           <Route exact path='/'>
             <Dashboard />
           </Route>
-          <Route path='/users' component={UserList}>
+          <Route path='/users'>
+            <UserList />
           </Route>
-          <Route path='/products'>
-            <ProductList />
+          <Route path='/courses'>
+            <CourseList />
           </Route>
         </Switch>
       </div>

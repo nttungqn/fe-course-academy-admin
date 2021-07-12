@@ -1,5 +1,6 @@
 import React from 'react'
 import { NotificationsNone, Language, Settings } from '@material-ui/icons'
+import { DEFAULT_AVATAR } from './../../config'
 
 import './Topbar.css'
 
@@ -23,7 +24,7 @@ export default function Topbar(props) {
                     <div className="topbarIconContainer">
                         <Settings />
                     </div>
-                    <img src="/avatar-admin.jpg" alt="avatar" className="topbarAvatar" />
+                    <img src={DEFAULT_AVATAR} alt="avatar" className="topbarAvatar" />
                 </div>
             </div>
         </div>

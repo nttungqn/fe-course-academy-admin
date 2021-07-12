@@ -1,12 +1,13 @@
-import "./UserList.css";
+import "./CourseList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { axiosInstance } from "../../utils/axios";
 
-import EditUser from './../EditUser/EditUser';
-import NewUser from './../NewUser/NewUser';
+import EditCourse from './../EditCourse/EditCourse';
+import NewCourse from './../NewCourse/NewCourse';
 import { Button } from "@material-ui/core";
+import { DEFAULT_COURSE_IMAGE } from './../../config'
 import { withSnackbar } from "notistack";
 
 const useStyles = makeStyles({
@@ -17,7 +18,7 @@ const useStyles = makeStyles({
     },
 });
 
-function UserList(props) {
+function ProductList(props) {
     const classes = useStyles();
     const [data, setData] = useState([]);
     const [editId, setEditId] = useState(null);
@@ -26,14 +27,14 @@ function UserList(props) {
 
     useEffect(function () {
         async function loadNewMembers() {
-            const res = await axiosInstance.get('/users?is_delete=false&limit=999&sort_type=asc');
-            if (res.data.users) {
-                let users = res.data.users.map((el) => {
-                    el['user']['role'] = el['role'];
-                    delete el['role'];
-                    return el['user'];
+            const res = await axiosInstance.get('/courses?limit=999&sort_type=asc');
+            if (res.data.courses) {
+                let courses = res.data.courses.map((el) => {
+                    el['course']['category'] = el['category'];
+                    delete el['category'];
+                    return el['course'];
                 });
-                setData(users);
+                setData(courses);
             }
         }
 
@@ -43,10 +44,10 @@ function UserList(props) {
     const handleDelete = async (id) => {
         setData(data.filter((item) => item.id !== id));
         try {
-            const res = await axiosInstance.delete(`/users/${id}`);
+            const res = await axiosInstance.delete(`/courses/${id}`);
             console.log(data)
             if (res.status === 200) {
-                props.enqueueSnackbar('Successfully deleted user', { variant: 'success' });
+                props.enqueueSnackbar('Successfully deleted course', { variant: 'success' });
             } else {
                 props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
             }
@@ -69,33 +70,33 @@ function UserList(props) {
     const columns = [
         { field: "id", headerName: "ID", flex: 0.15 },
         {
-            field: "user",
-            headerName: "User",
-            flex: 0.3,
+            field: "course",
+            headerName: "Course",
+            flex: 0.2,
             renderCell: (params) => {
                 return (
-                    <div className="userListItem">
-                        <img className="userListImg" src={params.row.avatar} alt="" />
-                        {params.row.fullname}
+                    <div className="courseListItem">
+                        <img className="courseListImg" src={params.row.image || DEFAULT_COURSE_IMAGE} alt="" />
+                        {params.row.name}
                     </div>
                 );
             },
         },
-        { field: "email", headerName: "Email", width: 200 },
+        { field: "price", headerName: "Price", flex: 0.15 },
         {
-            field: "role",
-            headerName: "Role",
-            flex: 0.15,
+            field: "category",
+            headerName: "Category",
+            flex: 0.45,
             renderCell: (params) => {
                 return (
-                    <div>{params.row.role.name}</div>
+                    <div>{params.row.category.name}</div>
                 );
             }
         },
         {
-            field: "address",
-            headerName: "Address",
-            flex: 0.5,
+            field: "view",
+            headerName: "View",
+            flex: 0.15,
         },
         {
             field: "action",
@@ -111,18 +112,6 @@ function UserList(props) {
                         <button className="buttonDelete" variant="contained"
                             onClick={() => handleDelete(params.row.id)}>Delete
                         </button>
-                        {/* <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => handleDelete(params.row.id)}
-                            startIcon={<DeleteIcon />}
-                        >
-                            Delete
-                        </Button> */}
-                        {/* <DeleteOutline
-                            className="userListDelete"
-                            onClick={() => handleDelete(params.row.id)}
-                        /> */}
                     </>
                 );
             },
@@ -130,10 +119,10 @@ function UserList(props) {
     ];
 
     return (
-        <div className="userList">
-            <h1>User List</h1>
+        <div className="courseList">
+            <h1>Course List</h1>
             <Button className='buttonCreate' variant="contained" color="primary" onClick={() => handleCreate()}>
-                Create new teacher
+                Create new course
             </Button>
             <DataGrid className={classes.dataGrid}
                 rows={data}
@@ -145,22 +134,9 @@ function UserList(props) {
             >
 
             </DataGrid>
-            {/* <Dialog open={true} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-                <DialogContent>
-                    <User id={id} />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleClose} color="primary">
-                        Subscribe
-                    </Button>
-                </DialogActions>
-            </Dialog> */}
-            {showEditDialog && <EditUser id={editId} toggle={() => setShowEditDialog(false)} />}
-            {showAddDialog && <NewUser toggle={() => setShowAddDialog(false)} />}
+
+            {showEditDialog && <EditCourse id={editId} toggle={() => setShowEditDialog(false)} />}
+            {showAddDialog && <NewCourse toggle={() => setShowAddDialog(false)} />}
 
 
         </div >
@@ -169,4 +145,4 @@ function UserList(props) {
 
 }
 
-export default withSnackbar(UserList);
+export default withSnackbar(ProductList);

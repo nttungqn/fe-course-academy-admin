@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import "./EditUser.css";
+import "./NewCourse.css";
 import { makeStyles } from '@material-ui/core/styles';
 import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
@@ -12,18 +12,7 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import moment from 'moment';
 import { withSnackbar } from 'notistack';
-
-const genders = [
-    {
-        id: 0,
-        name: 'female',
-    },
-    {
-        id: 1,
-        name: 'male'
-    }
-
-]
+import { DEFAULT_COURSE_IMAGE } from '../../config';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -43,31 +32,34 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const validationSchema = yup.object({
-    email: yup
-        .string('Enter your email')
-        .email('Enter a valid email')
-        .required('Email is required'),
-    fullname: yup
-        .string('Enter your fullname')
-        .required('Fullname is required'),
-    phone: yup
-        .string('Enter your password')
-        .required('Password is required'),
+    name: yup
+        .string('Enter your name')
+        .required('Name is required'),
+    price: yup
+        .number('Enter your price')
+        .required('Price is required'),
+    promotion_price: yup
+        .number('Enter your price'),
+
 });
 
-function EditUser(props) {
+function NewCourse(props) {
     const classes = useStyles();
 
-    const [initialValues, setInitialValues] = useState({
-        email: '',
-        fullname: '',
-        address: '',
-        role_id: '',
-        phone: '',
-        gender: '',
-        date_of_birth: moment(),
-    });
-    const [roles, setRoles] = useState([]);
+    let initialValues = {
+        name: '',
+        price: '',
+        is_delete: false,
+        course_field_id: 1,
+        description: '',
+        category_id: 1,
+        course_status_id: 1,
+        last_update: moment(),
+        view: 0,
+        created_by: 1
+    };
+    const [categories, setCategories] = useState([]);
+    const [courseFields, setCourseFields] = useState([]);
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -81,39 +73,35 @@ function EditUser(props) {
     };
 
     useEffect(function () {
-
-        async function loadUser() {
-
-            try {
-                const res = await axiosInstance.get(`/users/${props.id}`);
-                if (res.data) {
-                    setInitialValues({ ...res.data, date_of_birth: moment(res.data.date_of_birth, ["YYYY", moment.ISO_8601]).format('YYYY-MM-DD') });
-                }
-            } catch (e) {
-                setInitialValues({});
+        async function loadCategories() {
+            const res = await axiosInstance.get(`/categories`);
+            if (res.status === 200 || res.status === 304) {
+                setCategories(res.data);
             }
-
         }
 
-        async function loadRole() {
-            const res = await axiosInstance.get(`/roles`);
+        async function loadCourseFields() {
+            const res = await axiosInstance.get(`/fields`);
             if (res.status === 200 || res.status === 304) {
-                setRoles(res.data);
+                setCourseFields(res.data);
             }
         }
 
         handleClickOpen();
-        loadUser();
-        loadRole();
+        loadCategories();
+        loadCourseFields();
 
-    }, [props.id]);
+    }, []);
 
-    const handleEditOnClick = async (values) => {
+    const handleAddOnClick = async (values) => {
+
         try {
-            const res = await axiosInstance.put(`/users/${props.id}`, values);
-            console.log(res)
-            if (res.status === 200) {
-                props.enqueueSnackbar('Successfully updated user', { variant: 'success' });
+            let data = { ...initialValues, ...values, last_update: moment().format('YYYY-MM-DD h:mm:ss'), image: DEFAULT_COURSE_IMAGE }
+            console.log(data);
+            const res = await axiosInstance.post(`/courses`, data);
+
+            if (res.status === 200 || res.status === 201) {
+                props.enqueueSnackbar('Successfully add course', { variant: 'success' });
             } else {
                 props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
             }
@@ -131,44 +119,74 @@ function EditUser(props) {
             enableReinitialize={true}
             validationSchema={validationSchema}
         >
-            {({ values, errors, dirty, isValid, handleChange, handleReset }) => (
+            {({ values, errors, dirty, isValid, handleChange, handleReset, setFieldValue }) => (
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
-                    <DialogTitle id="form-dialog-title">Edit User</DialogTitle>
+                    <DialogTitle id="form-dialog-title">Add Course</DialogTitle>
                     <DialogContent>
 
-                        <form form className={classes.root} noValidate autoComplete="off">
+                        <form className={classes.root} noValidate autoComplete="off">
+
                             <TextField
                                 fullWidth
-                                id="fullname"
-                                name="fullname"
-                                label="Fullname"
-                                value={values.fullname}
+                                id="name"
+                                name="name"
+                                label="Name"
+                                value={values.name}
                                 onChange={handleChange}
-                                error={Boolean(errors.fullname)}
-                                helperText={errors.fullname}
+
                             />
                             <TextField
                                 fullWidth
-                                id="email"
-                                name="email"
-                                label="Email"
-                                value={values.email}
+                                id="price"
+                                name="price"
+                                label="Price"
+                                value={values.price}
                                 onChange={handleChange}
-                                error={Boolean(errors.email)}
-                                helperText={errors.email}
+                                error={Boolean(errors.price)}
+                                helperText={errors.price}
                             />
 
                             <TextField
-                                id="gender"
+                                fullWidth
+                                id="promotion_price"
+                                name="promotion_price"
+                                label="Promotion price"
+                                value={values.promotion_price}
+                                onChange={handleChange}
+                                error={Boolean(errors.promotion_price)}
+                                helperText={errors.promotion_price}
+                            />
+
+                            <TextField
+                                id="category_id"
                                 select
-                                label="Gender"
-                                value={values.gender}
+                                label="Category"
+                                // defaultValue={categories[0]}
                                 onChange={handleChange}
                                 SelectProps={{
                                     native: true,
                                 }}
+
                             >
-                                {genders && genders.map((option) => (
+                                {categories && categories.map((option) => (
+                                    <option key={option.id} value={option.id}>
+                                        {option.name}
+                                    </option>
+                                ))}
+                            </TextField>
+
+                            <TextField
+                                id="course_field_id"
+                                select
+                                label="Course fields"
+                                // value={courseFields[0]}
+                                onChange={handleChange}
+                                SelectProps={{
+                                    native: true,
+                                }}
+
+                            >
+                                {courseFields && courseFields.map((option) => (
                                     <option key={option.id} value={option.id}>
                                         {option.name}
                                     </option>
@@ -177,60 +195,32 @@ function EditUser(props) {
 
                             <TextField
                                 fullWidth
-                                id="phone"
-                                name="phone"
-                                label="Phone"
-                                value={values.phone}
+                                id="description"
+                                name="description"
+                                label="Description"
+                                multiline='true'
+                                value={values.description}
                                 onChange={handleChange}
-                                error={Boolean(errors.phone)}
-                                helperText={errors.phone}
+                                error={Boolean(errors.description)}
+                                helperText={errors.description}
                             />
-
-                            <TextField
-                                id="role_id"
-                                select
-                                label="Role"
-                                value={values.role_id}
-                                onChange={handleChange}
-                                SelectProps={{
-                                    native: true,
-                                }}
-
-                            >
-                                {roles && roles.map((option) => (
-                                    <option key={option.id} value={option.id}>
-                                        {option.name}
-                                    </option>
-                                ))}
-                            </TextField>
-
-                            <TextField
-                                fullWidth
-                                id="address"
-                                name="address"
-                                label="Address"
-                                value={values.address}
-                                onChange={handleChange}
-                                error={Boolean(errors.address)}
-                                helperText={errors.address}
-                            />
-
 
                         </form>
                     </DialogContent>
                     <DialogActions>
-                        <Button to={"/courses"} color="primary" onClick={() => handleEditOnClick(values)}>
-                            Update
+                        <Button to={"/courses"} color="primary" onClick={() => handleAddOnClick(values)}>
+                            Add
                         </Button>
                         <Button onClick={handleClose} color="primary">
                             Cancel
                         </Button>
                     </DialogActions>
                 </Dialog>
-            )}
-        </Formik>
+            )
+            }
+        </Formik >
 
     );
 }
 
-export default withSnackbar(EditUser);
+export default withSnackbar(NewCourse);

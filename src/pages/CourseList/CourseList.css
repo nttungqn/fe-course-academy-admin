@@ -1,13 +1,14 @@
-.productList {
+.courseList {
   flex: 4;
+  width: 100%;
 }
 
-.productListItem {
+.courseListItem {
   display: flex;
   align-items: center;
 }
 
-.productListImg {
+.courseListImg {
   width: 32px;
   height: 32px;
   border-radius: 50%;
@@ -15,17 +16,26 @@
   margin-right: 10px;
 }
 
-.productListEdit {
+.buttonCreate {
+  margin-bottom: 30px;
+}
+
+.buttonEdit {
   border: none;
   border-radius: 10px;
   padding: 5px 10px;
-  background-color: #3bb077;
+  background-color: #1a86d0;
   color: white;
   cursor: pointer;
   margin-right: 20px;
 }
 
-.productListDelete {
-  color: red;
+.buttonDelete {
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #fd5f00;
+  color: white;
   cursor: pointer;
+  margin-right: 20px;
 }
