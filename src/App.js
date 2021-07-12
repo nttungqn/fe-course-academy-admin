@@ -3,10 +3,11 @@ import Sidebar from './components/Sidebar/Sidebar';
 import Dashboard from './pages/Dashboard/Dashboard';
 import UserList from './pages/UserList/UserList';
 import CourseList from './pages/CourseList/CourseList';
+import VideoList from './pages/VideoList/VideoList'
+import DocList from './pages/DocList/DocList';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './App.css';
-import DocList from './pages/DocList/DocList';
 
 function App() {
   return (
@@ -26,6 +27,9 @@ function App() {
           </Route>
           <Route path='/documents'>
             <DocList />
+          </Route>
+          <Route path='/videos'>
+            <VideoList />
           </Route>
         </Switch>
       </div>

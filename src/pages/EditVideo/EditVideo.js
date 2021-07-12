@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import "./EditDoc.css";
+import "./EditVideo.css";
 import { makeStyles } from '@material-ui/core/styles';
 import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
@@ -63,7 +63,7 @@ function EditVideo(props) {
     useEffect(function () {
         async function loadDocument() {
             try {
-                const res = await axiosInstance.get(`/documents/${props.id}`);
+                const res = await axiosInstance.get(`/videos/${props.id}`);
                 if (res.data) {
                     setInitialValues({ ...res.data });
                 }
@@ -90,10 +90,10 @@ function EditVideo(props) {
     const handleEditOnClick = async (values) => {
 
         try {
-            const res = await axiosInstance.put(`/documents/${props.id}`, values);
+            const res = await axiosInstance.put(`/videos/${props.id}`, values);
             console.log(res)
             if (res.status === 200 || res.status === 202) {
-                props.enqueueSnackbar('Successfully updated document', { variant: 'success' });
+                props.enqueueSnackbar('Successfully updated video', { variant: 'success' });
 
             } else {
                 props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
