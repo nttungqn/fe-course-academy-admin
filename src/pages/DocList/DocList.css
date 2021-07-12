@@ -1,0 +1,41 @@
+.docList {
+  flex: 4;
+  width: 100%;
+}
+
+.docListItem {
+  display: flex;
+  align-items: center;
+}
+
+.docListImg {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 10px;
+}
+
+.buttonCreate {
+  margin-bottom: 30px;
+}
+
+.buttonEdit {
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #1a86d0;
+  color: white;
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.buttonDelete {
+  border: none;
+  border-radius: 10px;
+  padding: 5px 10px;
+  background-color: #fd5f00;
+  color: white;
+  cursor: pointer;
+  margin-right: 20px;
+}

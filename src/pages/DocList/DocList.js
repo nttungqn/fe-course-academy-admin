@@ -1,13 +1,11 @@
-import "./CourseList.css";
+import "./DocList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { axiosInstance } from "../../utils/axios";
 
-import EditCourse from './../EditCourse/EditCourse';
+import EditDoc from './../EditDoc/EditDoc';
 import NewCourse from './../NewCourse/NewCourse';
-import { Button } from "@material-ui/core";
-import { DEFAULT_COURSE_IMAGE } from './../../config'
 import { withSnackbar } from "notistack";
 
 const useStyles = makeStyles({
@@ -18,7 +16,7 @@ const useStyles = makeStyles({
     },
 });
 
-function CourseList(props) {
+function DocList(props) {
     const classes = useStyles();
     const [data, setData] = useState([]);
     const [editId, setEditId] = useState(null);
@@ -26,28 +24,27 @@ function CourseList(props) {
     const [showAddDialog, setShowAddDialog] = useState(false);
 
     useEffect(function () {
-        async function loadNewMembers() {
-            const res = await axiosInstance.get('/courses?limit=999&sort_type=asc');
-            if (res.data.courses) {
-                let courses = res.data.courses.map((el) => {
-                    el['course']['category'] = el['category'];
-                    delete el['category'];
-                    return el['course'];
+        async function loadDocuments() {
+            const res = await axiosInstance.get('/documents?limit=999&sort_type=asc');
+            if (res.data) {
+                let documents = res.data.map((el) => {
+                    el['document']['course'] = el['course'];
+                    delete el['course'];
+                    return el['document'];
                 });
-                setData(courses);
+                setData(documents);
             }
         }
-
-        loadNewMembers();
+        loadDocuments()
     }, []);
 
     const handleDelete = async (id) => {
         setData(data.filter((item) => item.id !== id));
         try {
-            const res = await axiosInstance.delete(`/courses/${id}`);
+            const res = await axiosInstance.delete(`/documents/${id}`);
             console.log(data)
             if (res.status === 200) {
-                props.enqueueSnackbar('Successfully deleted course', { variant: 'success' });
+                props.enqueueSnackbar('Successfully deleted documents', { variant: 'success' });
             } else {
                 props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
             }
@@ -62,41 +59,35 @@ function CourseList(props) {
         setShowEditDialog(true);
     };
 
-    const handleCreate = () => {
-        console.log('Button clicked')
-        setShowAddDialog(true);
-    }
-
     const columns = [
         { field: "id", headerName: "ID", flex: 0.15 },
+        {
+            field: "name",
+            headerName: "Name",
+            flex: 0.3,
+            renderCell: (params) => {
+                return (
+                    <div className="docListItem">
+                        {/* <img className="docListImg" src={params.row.image || DEFAULT_COURSE_IMAGE} alt="" /> */}
+                        {params.row.name}
+                    </div>
+                );
+            },
+        },
         {
             field: "course",
             headerName: "Course",
             flex: 0.2,
             renderCell: (params) => {
                 return (
-                    <div className="courseListItem">
-                        <img className="courseListImg" src={params.row.image || DEFAULT_COURSE_IMAGE} alt="" />
-                        {params.row.name}
-                    </div>
-                );
-            },
-        },
-        { field: "price", headerName: "Price", flex: 0.15 },
-        {
-            field: "category",
-            headerName: "Category",
-            flex: 0.45,
-            renderCell: (params) => {
-                return (
-                    <div>{params.row.category.name}</div>
+                    <div>{params.row.course.name}</div>
                 );
             }
         },
         {
-            field: "view",
-            headerName: "View",
-            flex: 0.15,
+            field: "url",
+            headerName: "URL",
+            flex: 0.5,
         },
         {
             field: "action",
@@ -120,10 +111,7 @@ function CourseList(props) {
 
     return (
         <div className="courseList">
-            <h1>Course List</h1>
-            <Button className='buttonCreate' variant="contained" color="primary" onClick={() => handleCreate()}>
-                Create new course
-            </Button>
+            <h1>Document List</h1>
             <DataGrid className={classes.dataGrid}
                 rows={data}
                 disableSelectionOnClick
@@ -135,9 +123,7 @@ function CourseList(props) {
 
             </DataGrid>
 
-            {showEditDialog && <EditCourse id={editId} toggle={() => setShowEditDialog(false)} />}
-            {showAddDialog && <NewCourse toggle={() => setShowAddDialog(false)} />}
-
+            {showEditDialog && <EditDoc id={editId} toggle={() => setShowEditDialog(false)} />}
 
         </div >
     );
@@ -145,4 +131,4 @@ function CourseList(props) {
 
 }
 
-export default withSnackbar(CourseList);
+export default withSnackbar(DocList);

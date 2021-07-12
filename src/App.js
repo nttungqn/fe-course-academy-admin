@@ -6,6 +6,7 @@ import CourseList from './pages/CourseList/CourseList';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './App.css';
+import DocList from './pages/DocList/DocList';
 
 function App() {
   return (
@@ -22,6 +23,9 @@ function App() {
           </Route>
           <Route path='/courses'>
             <CourseList />
+          </Route>
+          <Route path='/documents'>
+            <DocList />
           </Route>
         </Switch>
       </div>

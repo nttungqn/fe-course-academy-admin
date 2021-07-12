@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import "./EditCourse.css";
+import "./EditDoc.css";
 import { makeStyles } from '@material-ui/core/styles';
 import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
@@ -35,11 +35,9 @@ const validationSchema = yup.object({
     name: yup
         .string('Enter your name')
         .required('Name is required'),
-    price: yup
-        .number('Enter your price')
-        .required('Price is required'),
-    promotion_price: yup
-        .number('Enter your price'),
+    url: yup
+        .string('Enter your url')
+        .required('URL is required'),
 
 });
 
@@ -48,17 +46,10 @@ function EditCourse(props) {
 
     const [initialValues, setInitialValues] = useState({
         name: '',
-        price: '',
-        is_delete: false,
-        promotion_price: '',
-        course_field_id: '',
-        phone: '',
-        description: '',
-        last_update: moment(),
-        view: 0,
+        course_id: null,
+        url: ''
     });
-    const [categories, setCategories] = useState([]);
-    const [courseFields, setCourseFields] = useState([]);
+    const [courses, setCourses] = useState([]);
     const [open, setOpen] = useState(false);
 
     const handleClickOpen = () => {
@@ -72,11 +63,11 @@ function EditCourse(props) {
     };
 
     useEffect(function () {
-        async function loadCourse() {
+        async function loadDocument() {
             try {
-                const res = await axiosInstance.get(`/courses/${props.id}`);
+                const res = await axiosInstance.get(`/documents/${props.id}`);
                 if (res.data) {
-                    setInitialValues({ ...res.data, last_update: moment().format('YYYY-MM-DD h:mm:ss'), image: res.data.image || DEFAULT_COURSE_IMAGE });
+                    setInitialValues({ ...res.data });
                 }
             } catch (e) {
                 setInitialValues({});
@@ -84,34 +75,27 @@ function EditCourse(props) {
 
         }
 
-        async function loadCategories() {
-            const res = await axiosInstance.get(`/categories`);
+        async function loadCourses() {
+            const res = await axiosInstance.get(`/courses?limit=999`);
             if (res.status === 200 || res.status === 304) {
-                setCategories(res.data);
-            }
-        }
-
-        async function loadCourseFields() {
-            const res = await axiosInstance.get(`/fields`);
-            if (res.status === 200 || res.status === 304) {
-                setCourseFields(res.data);
+                const items = res.data.courses.map((el) => el.course);
+                setCourses(items);
             }
         }
 
         handleClickOpen();
-        loadCourse();
-        loadCategories();
-        loadCourseFields();
+        loadCourses();
+        loadDocument();
 
     }, [props.id]);
 
     const handleEditOnClick = async (values) => {
 
         try {
-            const res = await axiosInstance.put(`/courses/${props.id}`, values);
+            const res = await axiosInstance.put(`/documents/${props.id}`, values);
             console.log(res)
             if (res.status === 200 || res.status === 202) {
-                props.enqueueSnackbar('Successfully updated course', { variant: 'success' });
+                props.enqueueSnackbar('Successfully updated document', { variant: 'success' });
             } else {
                 props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
             }
@@ -145,58 +129,18 @@ function EditCourse(props) {
                                 error={Boolean(errors.name)}
                                 helperText={errors.name}
                             />
-                            <TextField
-                                fullWidth
-                                id="price"
-                                name="price"
-                                label="Price"
-                                value={values.price}
-                                onChange={handleChange}
-                                error={Boolean(errors.price)}
-                                helperText={errors.price}
-                            />
 
                             <TextField
-                                fullWidth
-                                id="promotion_price"
-                                name="promotion_price"
-                                label="Promotion price"
-                                value={values.promotion_price}
-                                onChange={handleChange}
-                                error={Boolean(errors.promotion_price)}
-                                helperText={errors.promotion_price}
-                            />
-
-                            <TextField
-                                id="category_id"
+                                id="course_id"
                                 select
-                                label="Category"
-                                value={values.category_id}
+                                label="Course"
                                 onChange={handleChange}
                                 SelectProps={{
                                     native: true,
                                 }}
 
                             >
-                                {categories && categories.map((option) => (
-                                    <option key={option.id} value={option.id}>
-                                        {option.name}
-                                    </option>
-                                ))}
-                            </TextField>
-
-                            <TextField
-                                id="course_field_id"
-                                select
-                                label="Course fields"
-                                value={values.course_field_id}
-                                onChange={handleChange}
-                                SelectProps={{
-                                    native: true,
-                                }}
-
-                            >
-                                {courseFields && courseFields.map((option) => (
+                                {courses && courses.map((option) => (
                                     <option key={option.id} value={option.id}>
                                         {option.name}
                                     </option>
@@ -205,14 +149,14 @@ function EditCourse(props) {
 
                             <TextField
                                 fullWidth
-                                id="description"
-                                name="description"
-                                label="Description"
+                                id="url"
+                                name="url"
+                                label="URL"
                                 multiline='true'
-                                value={values.description}
+                                value={values.url}
                                 onChange={handleChange}
-                                error={Boolean(errors.description)}
-                                helperText={errors.description}
+                                error={Boolean(errors.url)}
+                                helperText={errors.url}
                             />
 
                         </form>
