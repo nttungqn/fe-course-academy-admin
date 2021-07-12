@@ -112,9 +112,11 @@ function EditCourse(props) {
             console.log(res)
             if (res.status === 200 || res.status === 202) {
                 props.enqueueSnackbar('Successfully updated course', { variant: 'success' });
+
             } else {
                 props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
             }
+            setOpen(false);
 
         } catch (err) {
             console.log(err);

@@ -10,9 +10,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
-import moment from 'moment';
 import { withSnackbar } from 'notistack';
-import { DEFAULT_COURSE_IMAGE } from '../../config';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -96,10 +94,11 @@ function EditCourse(props) {
             console.log(res)
             if (res.status === 200 || res.status === 202) {
                 props.enqueueSnackbar('Successfully updated document', { variant: 'success' });
+
             } else {
                 props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
             }
-
+            setOpen(false);
         } catch (err) {
             console.log(err);
             props.enqueueSnackbar('Failed done the operation', { variant: 'error' });

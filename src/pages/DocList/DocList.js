@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import { axiosInstance } from "../../utils/axios";
 
 import EditDoc from './../EditDoc/EditDoc';
-import NewCourse from './../NewCourse/NewCourse';
 import { withSnackbar } from "notistack";
 
 const useStyles = makeStyles({
@@ -21,7 +20,6 @@ function DocList(props) {
     const [data, setData] = useState([]);
     const [editId, setEditId] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
-    const [showAddDialog, setShowAddDialog] = useState(false);
 
     useEffect(function () {
         async function loadDocuments() {

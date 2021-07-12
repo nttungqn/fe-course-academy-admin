@@ -119,7 +119,7 @@ function NewUser(props) {
             } else {
                 props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
             }
-
+            setOpen(false);
         } catch (err) {
             props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
         }

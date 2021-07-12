@@ -117,7 +117,7 @@ function EditUser(props) {
             } else {
                 props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
             }
-
+            setOpen(false);
         } catch (err) {
             console.log(err);
             props.enqueueSnackbar('Failed done the operation', { variant: 'error' });

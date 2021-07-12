@@ -43,19 +43,19 @@ export default function Sidebar() {
                         <Link to='/courses' className="link">
                             <li className="sidebarListItem">
                                 <LibraryBooks className="sidebarIcon" />
-                                Course List
+                                Course
                             </li>
                         </Link>
                         <Link to='/documents' className="link">
                             <li className="sidebarListItem">
                                 <Assignment className="sidebarIcon" />
-                                Document List
+                                Document
                             </li>
                         </Link>
                         <Link to='/videos' className="link">
                             <li className="sidebarListItem">
                                 <VideoLibrary className="sidebarIcon" />
-                                Video List
+                                Video
                             </li>
                         </Link>
                     </ul>
