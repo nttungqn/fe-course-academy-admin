@@ -37,11 +37,10 @@ function DocList(props) {
     }, []);
 
     const handleDelete = async (id) => {
-        setData(data.filter((item) => item.id !== id));
         try {
             const res = await axiosInstance.delete(`/documents/${id}`);
-            console.log(data)
             if (res.status === 200) {
+                setData(data.filter((item) => item.id !== id));
                 props.enqueueSnackbar('Successfully deleted documents', { variant: 'success' });
             } else {
                 props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });

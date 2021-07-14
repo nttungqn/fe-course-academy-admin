@@ -6,9 +6,11 @@ import CourseList from './pages/CourseList/CourseList';
 import VideoList from './pages/VideoList/VideoList'
 import DocList from './pages/DocList/DocList';
 import CategoryList from './pages/CategoryList/CategoryList';
+import FieldList from './pages/FieldList/FieldList';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './App.css';
+import OrderList from './pages/OrderList/OrderList';
 
 function App() {
   return (
@@ -34,6 +36,12 @@ function App() {
           </Route>
           <Route path='/categories'>
             <CategoryList />
+          </Route>
+          <Route path='/fields'>
+            <FieldList />
+          </Route>
+          <Route path='/orders'>
+            <OrderList />
           </Route>
         </Switch>
       </div>

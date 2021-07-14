@@ -1,10 +1,14 @@
-import "./VideoList.css";
+import "./FieldList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { axiosInstance } from "../../utils/axios";
+
+import EditField from './../EditField/EditField';
 import { withSnackbar } from "notistack";
-import EditVideo from './../EditVideo/EditVideo';
+import { DEFAULT_COURSE_IMAGE } from "../../config";
+import NewField from "../NewField/NewField";
+import { Button } from "@material-ui/core";
 
 const useStyles = makeStyles({
 
@@ -14,22 +18,18 @@ const useStyles = makeStyles({
     },
 });
 
-function VideoList(props) {
+function FieldList(props) {
     const classes = useStyles();
     const [data, setData] = useState([]);
     const [editId, setEditId] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
+    const [showAddDialog, setShowAddDialog] = useState(false);
 
     useEffect(function () {
         async function loadDocuments() {
-            const res = await axiosInstance.get('/videos?limit=999&sort_type=asc');
+            const res = await axiosInstance.get('/fields?limit=999&sort_type=asc');
             if (res.data) {
-                let videos = res.data.map((el) => {
-                    el['video']['course'] = el['course'];
-                    delete el['course'];
-                    return el['video'];
-                });
-                setData(videos);
+                setData(res.data);
             }
         }
         loadDocuments()
@@ -37,10 +37,10 @@ function VideoList(props) {
 
     const handleDelete = async (id) => {
         try {
-            const res = await axiosInstance.delete(`/videos/${id}`);
+            const res = await axiosInstance.delete(`/fields/${id}`);
             if (res.status === 200) {
                 setData(data.filter((item) => item.id !== id));
-                props.enqueueSnackbar('Successfully deleted videos', { variant: 'success' });
+                props.enqueueSnackbar('Successfully deleted fields', { variant: 'success' });
             } else {
                 props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
             }
@@ -55,6 +55,10 @@ function VideoList(props) {
         setShowEditDialog(true);
     };
 
+    const handleCreate = () => {
+        setShowAddDialog(true);
+    }
+
     const columns = [
         { field: "id", headerName: "ID", flex: 0.15 },
         {
@@ -63,27 +67,12 @@ function VideoList(props) {
             flex: 0.3,
             renderCell: (params) => {
                 return (
-                    <div className="docListItem">
-                        {/* <img className="docListImg" src={params.row.image || DEFAULT_COURSE_IMAGE} alt="" /> */}
+                    <div className="fieldListItem">
+                        <img className="fieldListImg" src={params.row.image || DEFAULT_COURSE_IMAGE} alt="" />
                         {params.row.name}
                     </div>
                 );
             },
-        },
-        {
-            field: "course",
-            headerName: "Course",
-            flex: 0.2,
-            renderCell: (params) => {
-                return (
-                    <div>{params.row.course.name}</div>
-                );
-            }
-        },
-        {
-            field: "url",
-            headerName: "URL",
-            flex: 0.5,
         },
         {
             field: "action",
@@ -106,8 +95,11 @@ function VideoList(props) {
     ];
 
     return (
-        <div className="courseList">
-            <h1>Video List</h1>
+        <div className="fieldList">
+            <h1>Field List</h1>
+            <Button className='buttonCreate' variant="contained" color="primary" onClick={() => handleCreate()}>
+                Create new field
+            </Button>
             <DataGrid className={classes.dataGrid}
                 rows={data}
                 disableSelectionOnClick
@@ -118,7 +110,9 @@ function VideoList(props) {
             >
 
             </DataGrid>
-            {showEditDialog && <EditVideo id={editId} toggle={() => setShowEditDialog(false)} />}
+
+            {showEditDialog && <EditField id={editId} toggle={() => setShowEditDialog(false)} />}
+            {showAddDialog && <NewField toggle={() => setShowAddDialog(false)} />}
 
 
         </div >
@@ -127,4 +121,4 @@ function VideoList(props) {
 
 }
 
-export default withSnackbar(VideoList);
+export default withSnackbar(FieldList);

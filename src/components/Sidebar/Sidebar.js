@@ -6,7 +6,9 @@ import {
     VideoLibrary,
     Assignment,
     LibraryBooks,
-    Category
+    Category,
+    Class,
+    Cached
 } from "@material-ui/icons";
 
 import { Link } from 'react-router-dom';
@@ -63,6 +65,18 @@ export default function Sidebar() {
                             <li className="sidebarListItem">
                                 <Category className="sidebarIcon" />
                                 Category
+                            </li>
+                        </Link>
+                        <Link to='/fields' className="link">
+                            <li className="sidebarListItem">
+                                <Class className="sidebarIcon" />
+                                Field
+                            </li>
+                        </Link>
+                        <Link to='/orders' className="link">
+                            <li className="sidebarListItem">
+                                <Cached className="sidebarIcon" />
+                                Order
                             </li>
                         </Link>
                     </ul>

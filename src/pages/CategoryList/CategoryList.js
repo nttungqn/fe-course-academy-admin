@@ -35,6 +35,21 @@ function CategoryList(props) {
         loadCategories();
     }, []);
 
+    const handleDelete = async (id) => {
+        try {
+            const res = await axiosInstance.delete(`/categories/${id}`);
+            if (res.status === 200) {
+                setData(data.filter((item) => item.id !== id));
+                props.enqueueSnackbar('Successfully deleted category', { variant: 'success' });
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+
+        } catch (err) {
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+    };
+
     const handleEdit = (id) => {
         setEditId(id);
         setShowEditDialog(true);
@@ -82,9 +97,9 @@ function CategoryList(props) {
                             onClick={() => handleEdit(params.row.id)}>Edit
                         </button>
 
-                        {/* <button className="buttonDelete" variant="contained"
+                        <button className="buttonDelete" variant="contained"
                             onClick={() => handleDelete(params.row.id)}>Delete
-                        </button> */}
+                        </button>
                     </>
                 );
             },
