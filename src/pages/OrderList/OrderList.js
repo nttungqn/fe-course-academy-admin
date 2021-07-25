@@ -2,7 +2,7 @@ import "./OrderList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { axiosInstance } from "../../utils/axios";
+import { axiosInstance } from "../../utils/base";
 
 import { withSnackbar } from "notistack";
 import moment from "moment";
@@ -149,7 +149,8 @@ function OrderList(props) {
             </Dialog> */}
             {/* {showEditDialog && <EditUser id={editId} toggle={() => setShowEditDialog(false)} />}
             {showAddDialog && <NewUser toggle={() => setShowAddDialog(false)} />} */}
-
+            {/* {showEditDialog && <EditCourse handle={handleEditOnClick} id={editId} toggle={() => setShowEditDialog(false)} />}
+            {showAddDialog && <NewCourse handle={handleAddOnClick} toggle={() => setShowAddDialog(false)} />} */}
 
         </div >
     );

@@ -2,13 +2,14 @@ import "./CourseList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { axiosInstance } from "../../utils/axios";
+import { axiosInstance } from "../../utils/base";
 
 import EditCourse from './../EditCourse/EditCourse';
 import NewCourse from './../NewCourse/NewCourse';
 import { Button } from "@material-ui/core";
 import { DEFAULT_COURSE_IMAGE } from './../../config'
 import { withSnackbar } from "notistack";
+import moment from "moment";
 
 const useStyles = makeStyles({
 
@@ -25,20 +26,21 @@ function CourseList(props) {
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [showAddDialog, setShowAddDialog] = useState(false);
 
-    useEffect(function () {
-        async function loadNewMembers() {
-            const res = await axiosInstance.get('/courses?limit=999&sort_type=asc');
-            if (res.data.courses) {
-                let courses = res.data.courses.map((el) => {
-                    el['course']['category'] = el['category'];
-                    delete el['category'];
-                    return el['course'];
-                });
-                setData(courses);
-            }
+    async function loadCourses() {
+        const res = await axiosInstance.get('/courses?limit=999&sort_type=asc');
+        if (res.data.courses) {
+            let courses = res.data.courses.map((el) => {
+                el['course']['category'] = el['category'];
+                delete el['category'];
+                return el['course'];
+            });
+            setData(courses);
         }
+    }
 
-        loadNewMembers();
+    useEffect(function () {
+
+        loadCourses();
     }, []);
 
     const handleDelete = async (id) => {
@@ -117,6 +119,46 @@ function CourseList(props) {
         },
     ];
 
+    const handleAddOnClick = async (initialValues, values) => {
+
+        try {
+            let data = { image: DEFAULT_COURSE_IMAGE, ...initialValues, ...values, last_update: moment().format('YYYY-MM-DD h:mm:ss') }
+            console.log(data);
+            const res = await axiosInstance.post(`/courses`, data);
+            if (res.status === 200 || res.status === 201) {
+                props.enqueueSnackbar('Successfully add course', { variant: 'success' });
+                await loadCourses();
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+            setShowAddDialog(false);
+        } catch (err) {
+            console.log(err);
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+
+    }
+
+    const handleEditOnClick = async (values) => {
+
+        try {
+            const res = await axiosInstance.put(`/courses/${editId}`, values);
+            console.log(res)
+            if (res.status === 200 || res.status === 202) {
+                props.enqueueSnackbar('Successfully updated course', { variant: 'success' });
+                await loadCourses();
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+            setShowEditDialog(false);
+
+        } catch (err) {
+            console.log(err);
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+
+    }
+
     return (
         <div className="courseList">
             <h1>Course List</h1>
@@ -134,8 +176,8 @@ function CourseList(props) {
 
             </DataGrid>
 
-            {showEditDialog && <EditCourse id={editId} toggle={() => setShowEditDialog(false)} />}
-            {showAddDialog && <NewCourse toggle={() => setShowAddDialog(false)} />}
+            {showEditDialog && <EditCourse handle={handleEditOnClick} id={editId} toggle={() => setShowEditDialog(false)} />}
+            {showAddDialog && <NewCourse handle={handleAddOnClick} toggle={() => setShowAddDialog(false)} />}
 
         </div >
     );

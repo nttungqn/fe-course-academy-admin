@@ -2,7 +2,7 @@ import "./DocList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { axiosInstance } from "../../utils/axios";
+import { axiosInstance } from "../../utils/base";
 
 import EditDoc from './../EditDoc/EditDoc';
 import { withSnackbar } from "notistack";
@@ -21,18 +21,18 @@ function DocList(props) {
     const [editId, setEditId] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
 
-    useEffect(function () {
-        async function loadDocuments() {
-            const res = await axiosInstance.get('/documents?limit=999&sort_type=asc');
-            if (res.data) {
-                let documents = res.data.map((el) => {
-                    el['document']['course'] = el['course'];
-                    delete el['course'];
-                    return el['document'];
-                });
-                setData(documents);
-            }
+    async function loadDocuments() {
+        const res = await axiosInstance.get('/documents?limit=999&sort_type=asc');
+        if (res.data) {
+            let documents = res.data.map((el) => {
+                el['document']['course'] = el['course'];
+                delete el['course'];
+                return el['document'];
+            });
+            setData(documents);
         }
+    }
+    useEffect(function () {
         loadDocuments()
     }, []);
 
@@ -106,6 +106,25 @@ function DocList(props) {
         },
     ];
 
+    const handleEditOnClick = async (values) => {
+
+        try {
+            const res = await axiosInstance.put(`/documents/${editId}`, values);
+            console.log(res)
+            if (res.status === 200 || res.status === 202) {
+                props.enqueueSnackbar('Successfully updated document', { variant: 'success' });
+                await loadDocuments();
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+            setShowEditDialog(false);
+        } catch (err) {
+            console.log(err);
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+
+    }
+
     return (
         <div className="courseList">
             <h1>Document List</h1>
@@ -120,7 +139,7 @@ function DocList(props) {
 
             </DataGrid>
 
-            {showEditDialog && <EditDoc id={editId} toggle={() => setShowEditDialog(false)} />}
+            {showEditDialog && <EditDoc handle={handleEditOnClick} id={editId} toggle={() => setShowEditDialog(false)} />}
 
         </div >
     );

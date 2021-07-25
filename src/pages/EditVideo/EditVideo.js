@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { axiosInstance } from '../../utils/axios';
+import { axiosInstance } from '../../utils/base';
 import { Formik } from 'formik';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -87,25 +87,6 @@ function EditVideo(props) {
 
     }, [props.id]);
 
-    const handleEditOnClick = async (values) => {
-
-        try {
-            const res = await axiosInstance.put(`/videos/${props.id}`, values);
-            console.log(res)
-            if (res.status === 200 || res.status === 202) {
-                props.enqueueSnackbar('Successfully updated video', { variant: 'success' });
-
-            } else {
-                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
-            }
-            setOpen(false);
-        } catch (err) {
-            console.log(err);
-            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
-        }
-
-    }
-
     return (
         <Formik
             initialValues={initialValues}
@@ -161,7 +142,7 @@ function EditVideo(props) {
                         </form>
                     </DialogContent>
                     <DialogActions>
-                        <Button to={"/users"} color="primary" onClick={() => handleEditOnClick(values)}>
+                        <Button to={"/users"} color="primary" onClick={() => props.handle(values)}>
                             Update
                         </Button>
                         <Button onClick={handleClose} color="primary">

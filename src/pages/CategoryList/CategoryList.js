@@ -2,7 +2,7 @@ import "./CategoryList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { axiosInstance } from "../../utils/axios";
+import { axiosInstance } from "../../utils/base";
 import { withSnackbar } from "notistack";
 import moment from "moment";
 import EditCategory from './../EditCategory/EditCategory';
@@ -24,14 +24,14 @@ function CategoryList(props) {
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [showAddDialog, setShowAddDialog] = useState(false);
 
+    async function loadCategories() {
+        const res = await axiosInstance.get('/categories?limit=999&sort_type=asc');
+        if (res.data) {
+            setData(res.data);
+        }
+    }
 
     useEffect(function () {
-        async function loadCategories() {
-            const res = await axiosInstance.get('/categories?limit=999&sort_type=asc');
-            if (res.data) {
-                setData(res.data);
-            }
-        }
         loadCategories();
     }, []);
 
@@ -106,6 +106,45 @@ function CategoryList(props) {
         },
     ];
 
+    const handleEditOnClick = async (values) => {
+
+        try {
+            const res = await axiosInstance.put(`/categories/${editId}`, values);
+            console.log(res)
+            if (res.status === 200 || res.status === 202) {
+                props.enqueueSnackbar('Successfully updated document', { variant: 'success' });
+                await loadCategories();
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+            setShowEditDialog(false);
+        } catch (err) {
+            console.log(err);
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+
+    }
+
+    const handleAddOnClick = async (initialValues, values) => {
+
+        try {
+            let data = { ...initialValues, ...values }
+
+            const res = await axiosInstance.post(`/categories`, data);
+
+            if (res.status === 200 || res.status === 201) {
+                props.enqueueSnackbar('Successfully add category', { variant: 'success' });
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+            setShowAddDialog(false);
+        } catch (err) {
+            console.log(err);
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+
+    }
+
     return (
         <div className="courseList">
             <h1>Category List</h1>
@@ -122,8 +161,8 @@ function CategoryList(props) {
             >
 
             </DataGrid>
-            {showEditDialog && <EditCategory id={editId} toggle={() => setShowEditDialog(false)} />}
-            {showAddDialog && <NewCategory toggle={() => setShowAddDialog(false)} />}
+            {showEditDialog && <EditCategory handle={handleEditOnClick} id={editId} toggle={() => setShowEditDialog(false)} />}
+            {showAddDialog && <NewCategory handle={handleAddOnClick} toggle={() => setShowAddDialog(false)} />}
 
         </div >
     );

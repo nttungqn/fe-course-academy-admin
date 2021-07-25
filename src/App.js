@@ -15,10 +15,13 @@ import OrderList from './pages/OrderList/OrderList';
 function App() {
   return (
     <Router>
+      <Switch >
+        <Route path='/login'><Dashboard /></Route>
+      </Switch>
       <Topbar />
       <div className="container">
         <Sidebar />
-        <Switch >
+        <Switch>
           <Route exact path='/'>
             <Dashboard />
           </Route>

@@ -1,7 +1,8 @@
 import "./WidgetSm.css";
 import { useEffect, useState } from "react";
 
-import { axiosInstance } from "../../utils/axios";
+import { axiosInstance } from "../../utils/base";
+import { DEFAULT_AVATAR } from './../../config'
 
 export default function WidgetSm() {
     const [members, setMembers] = useState([]);
@@ -24,8 +25,8 @@ export default function WidgetSm() {
                         <li className="widgetSmListItem">
                             <div className="widgetSmGroup">
                                 <img
-                                    src="https://images.pexels.com/photos/3992656/pexels-photo-3992656.png?auto=compress&cs=tinysrgb&dpr=2&w=500"
-                                    alt=""
+                                    src={el.avatar || DEFAULT_AVATAR}
+                                    alt={el.fullname}
                                     className="widgetSmImg"
                                 />
                                 <div className="widgetSmUser">

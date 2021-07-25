@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { axiosInstance } from '../../utils/axios';
 import { Formik } from 'formik';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -59,25 +58,6 @@ function NewCategory(props) {
         handleClickOpen();
     }, []);
 
-    const handleAddOnClick = async (values) => {
-
-        try {
-            let data = { ...initialValues, ...values }
-
-            const res = await axiosInstance.post(`/categories`, data);
-
-            if (res.status === 200 || res.status === 201) {
-                props.enqueueSnackbar('Successfully add category', { variant: 'success' });
-            } else {
-                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
-            }
-            setOpen(false);
-        } catch (err) {
-            console.log(err);
-            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
-        }
-
-    }
 
     return (
         <Formik
@@ -105,7 +85,7 @@ function NewCategory(props) {
                         </form>
                     </DialogContent>
                     <DialogActions>
-                        <Button to={"/courses"} color="primary" onClick={() => handleAddOnClick(values)}>
+                        <Button to={"/courses"} color="primary" onClick={() => props.handle(initialValues, values)}>
                             Add
                         </Button>
                         <Button onClick={handleClose} color="primary">

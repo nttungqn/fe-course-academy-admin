@@ -2,7 +2,7 @@ import "./VideoList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { axiosInstance } from "../../utils/axios";
+import { axiosInstance } from "../../utils/base";
 import { withSnackbar } from "notistack";
 import EditVideo from './../EditVideo/EditVideo';
 
@@ -20,19 +20,19 @@ function VideoList(props) {
     const [editId, setEditId] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
 
-    useEffect(function () {
-        async function loadDocuments() {
-            const res = await axiosInstance.get('/videos?limit=999&sort_type=asc');
-            if (res.data) {
-                let videos = res.data.map((el) => {
-                    el['video']['course'] = el['course'];
-                    delete el['course'];
-                    return el['video'];
-                });
-                setData(videos);
-            }
+    async function loadVideos() {
+        const res = await axiosInstance.get('/videos?limit=999&sort_type=asc');
+        if (res.data) {
+            let videos = res.data.map((el) => {
+                el['video']['course'] = el['course'];
+                delete el['course'];
+                return el['video'];
+            });
+            setData(videos);
         }
-        loadDocuments()
+    }
+    useEffect(function () {
+        loadVideos()
     }, []);
 
     const handleDelete = async (id) => {
@@ -105,6 +105,25 @@ function VideoList(props) {
         },
     ];
 
+    const handleEditOnClick = async (values) => {
+
+        try {
+            const res = await axiosInstance.put(`/videos/${editId}`, values);
+            console.log(res)
+            if (res.status === 200 || res.status === 202) {
+                props.enqueueSnackbar('Successfully updated video', { variant: 'success' });
+                await loadVideos();
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+            setShowEditDialog(false);
+        } catch (err) {
+            console.log(err);
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+
+    }
+
     return (
         <div className="courseList">
             <h1>Video List</h1>
@@ -118,7 +137,7 @@ function VideoList(props) {
             >
 
             </DataGrid>
-            {showEditDialog && <EditVideo id={editId} toggle={() => setShowEditDialog(false)} />}
+            {showEditDialog && <EditVideo handle={handleEditOnClick} id={editId} toggle={() => setShowEditDialog(false)} />}
 
 
         </div >

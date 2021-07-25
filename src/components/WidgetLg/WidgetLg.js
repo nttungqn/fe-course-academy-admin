@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import { axiosInstance } from '../../utils/axios';
+import { axiosInstance } from '../../utils/base';
 import moment from 'moment';
 import './WidgetLg.css'
+import { DEFAULT_AVATAR } from './../../config'
 
 export default function WidgetLg() {
     const [trans, setTrans] = useState([]);
 
     useEffect(function () {
         async function loadTrans() {
-            const res = await axiosInstance.get('/course_order?limit=4&sort_by=enroll_at&sort_type=desc')
+            const res = await axiosInstance.get('/orders?limit=4&sort_by=enroll_at&sort_type=desc')
             setTrans(res.data.courseOrders);
         }
 
@@ -34,8 +35,8 @@ export default function WidgetLg() {
                         <tr className="widgetLgTr">
                             <td className="widgetLgUser">
                                 <img
-                                    src="https://images.pexels.com/photos/4172933/pexels-photo-4172933.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940"
-                                    alt=""
+                                    src={el.user.avatar || DEFAULT_AVATAR}
+                                    alt={el.user.fullname}
                                     className="widgetLgImg"
                                 />
                                 <span className="widgetLgName">{el.user.fullname}</span>

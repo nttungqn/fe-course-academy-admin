@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { axiosInstance } from '../../utils/axios';
+import { axiosInstance } from '../../utils/base';
 import { Formik } from 'formik';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -12,7 +12,6 @@ import DialogTitle from '@material-ui/core/DialogTitle';
 import DialogActions from '@material-ui/core/DialogActions';
 import moment from 'moment';
 import { withSnackbar } from 'notistack';
-import { DEFAULT_COURSE_IMAGE } from '../../config';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -93,25 +92,7 @@ function NewCourse(props) {
 
     }, []);
 
-    const handleAddOnClick = async (values) => {
 
-        try {
-            let data = { ...initialValues, ...values, last_update: moment().format('YYYY-MM-DD h:mm:ss'), image: DEFAULT_COURSE_IMAGE }
-            console.log(data);
-            const res = await axiosInstance.post(`/courses`, data);
-
-            if (res.status === 200 || res.status === 201) {
-                props.enqueueSnackbar('Successfully add course', { variant: 'success' });
-            } else {
-                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
-            }
-            setOpen(false);
-        } catch (err) {
-            console.log(err);
-            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
-        }
-
-    }
 
     return (
         <Formik
@@ -208,7 +189,7 @@ function NewCourse(props) {
                         </form>
                     </DialogContent>
                     <DialogActions>
-                        <Button to={"/courses"} color="primary" onClick={() => handleAddOnClick(values)}>
+                        <Button to={"/courses"} color="primary" onClick={() => props.handle(initialValues, values)}>
                             Add
                         </Button>
                         <Button onClick={handleClose} color="primary">

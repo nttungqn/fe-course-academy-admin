@@ -4,7 +4,7 @@ import {
     LibraryBooks,
     FlashOn
 } from '@material-ui/icons'
-import { axiosInstance } from './../../utils/axios'
+import { axiosInstance } from '../../utils/base'
 
 import './FeatureInfo.css'
 
@@ -15,7 +15,7 @@ export default function FeatureInfo() {
 
     useEffect(function () {
         async function loadNumberStudents() {
-            const res = await axiosInstance.get(`/users?role_id=2&is_delete=false&limit=999`);
+            const res = await axiosInstance.get(`/users?limit=999`);
             setNumStudents(res.data.length);
         }
 
@@ -25,7 +25,7 @@ export default function FeatureInfo() {
         }
 
         async function loadNumberTransaction() {
-            const res = await axiosInstance.get('/course_order?limit=999');
+            const res = await axiosInstance.get('/orders?limit=999');
             setNumTrans(res.data.length);
         }
 

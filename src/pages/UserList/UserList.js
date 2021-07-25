@@ -2,7 +2,7 @@ import "./UserList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { axiosInstance } from "../../utils/axios";
+import { axiosInstance } from "../../utils/base";
 
 import EditUser from './../EditUser/EditUser';
 import NewUser from './../NewUser/NewUser';
@@ -24,20 +24,19 @@ function UserList(props) {
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [showAddDialog, setShowAddDialog] = useState(false);
 
-    useEffect(function () {
-        async function loadNewMembers() {
-            const res = await axiosInstance.get('/users?is_delete=false&limit=999&sort_type=asc');
-            if (res.data.users) {
-                let users = res.data.users.map((el) => {
-                    el['user']['role'] = el['role'];
-                    delete el['role'];
-                    return el['user'];
-                });
-                setData(users);
-            }
+    async function loadUsers() {
+        const res = await axiosInstance.get('/users?is_delete=false&limit=999&sort_type=asc');
+        if (res.data.users) {
+            let users = res.data.users.map((el) => {
+                el['user']['role'] = el['role'];
+                delete el['role'];
+                return el['user'];
+            });
+            setData(users);
         }
-
-        loadNewMembers();
+    }
+    useEffect(function () {
+        loadUsers();
     }, []);
 
     const handleDelete = async (id) => {
@@ -64,6 +63,48 @@ function UserList(props) {
     const handleCreate = () => {
         console.log('Button clicked')
         setShowAddDialog(true);
+    }
+
+    const handleEditOnClick = async (values) => {
+        try {
+            const res = await axiosInstance.put(`/users/${editId}`, values);
+            console.log(res)
+            if (res.status === 200) {
+                props.enqueueSnackbar('Successfully updated user', { variant: 'success' });
+                await loadUsers();
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+            setShowEditDialog(false);
+        } catch (err) {
+            console.log(err);
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+
+    }
+
+    const handleAddOnClick = async (values, roles) => {
+        try {
+            let role_id;
+            roles.forEach((role) => {
+                if (role.name.toLowerCase() === 'teacher') {
+                    role_id = role.id;
+                }
+            })
+            const data = { ...values, role_id: role_id }
+            const res = await axiosInstance.post(`/users`, data);
+
+            if (res.status === 201) {
+                props.enqueueSnackbar('Successfully created user', { variant: 'success' });
+                await loadUsers();
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+            setShowAddDialog(false);
+        } catch (err) {
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+
     }
 
     const columns = [
@@ -111,18 +152,6 @@ function UserList(props) {
                         <button className="buttonDelete" variant="contained"
                             onClick={() => handleDelete(params.row.id)}>Delete
                         </button>
-                        {/* <Button
-                            variant="contained"
-                            color="secondary"
-                            onClick={() => handleDelete(params.row.id)}
-                            startIcon={<DeleteIcon />}
-                        >
-                            Delete
-                        </Button> */}
-                        {/* <DeleteOutline
-                            className="userListDelete"
-                            onClick={() => handleDelete(params.row.id)}
-                        /> */}
                     </>
                 );
             },
@@ -145,23 +174,9 @@ function UserList(props) {
             >
 
             </DataGrid>
-            {/* <Dialog open={true} onClose={handleClose} aria-labelledby="form-dialog-title">
-                <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-                <DialogContent>
-                    <User id={id} />
-                </DialogContent>
-                <DialogActions>
-                    <Button onClick={handleClose} color="primary">
-                        Cancel
-                    </Button>
-                    <Button onClick={handleClose} color="primary">
-                        Subscribe
-                    </Button>
-                </DialogActions>
-            </Dialog> */}
-            {showEditDialog && <EditUser id={editId} toggle={() => setShowEditDialog(false)} />}
-            {showAddDialog && <NewUser toggle={() => setShowAddDialog(false)} />}
 
+            {showEditDialog && <EditUser handle={handleEditOnClick} id={editId} toggle={() => setShowEditDialog(false)} />}
+            {showAddDialog && <NewUser handle={handleAddOnClick} toggle={() => setShowAddDialog(false)} />}
 
         </div >
     );

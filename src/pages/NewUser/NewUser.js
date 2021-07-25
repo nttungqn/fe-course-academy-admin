@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { axiosInstance } from '../../utils/axios';
+import { axiosInstance } from '../../utils/base';
 import { Formik } from 'formik';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -99,32 +99,9 @@ function NewUser(props) {
 
         handleClickOpen();
         loadRole();
-
-
     }, [props.id]);
 
-    const handleAddOnClick = async (values) => {
-        try {
-            let role_id;
-            roles.forEach((role) => {
-                if (role.name.toLowerCase() === 'teacher') {
-                    role_id = role.id;
-                }
-            })
-            const data = { ...values, role_id: role_id }
-            const res = await axiosInstance.post(`/users`, data);
-            console.log(data)
-            if (res.status === 201) {
-                props.enqueueSnackbar('Successfully created user', { variant: 'success' });
-            } else {
-                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
-            }
-            setOpen(false);
-        } catch (err) {
-            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
-        }
 
-    }
 
     return (
         <Formik
@@ -230,11 +207,10 @@ function NewUser(props) {
                                 helperText={errors.address}
                             />
 
-
                         </form>
                     </DialogContent>
                     <DialogActions>
-                        <Button to={"/users"} color="primary" onClick={() => handleAddOnClick(values)}>
+                        <Button to={"/users"} color="primary" onClick={() => props.handle(values, roles)}>
                             Add
                         </Button>
                         <Button onClick={handleClose} color="primary">

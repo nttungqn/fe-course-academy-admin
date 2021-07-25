@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import * as yup from 'yup';
 import Button from '@material-ui/core/Button';
 import TextField from '@material-ui/core/TextField';
-import { axiosInstance } from '../../utils/axios';
+import { axiosInstance } from '../../utils/base';
 import { Formik } from 'formik';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
@@ -72,24 +72,22 @@ function EditField(props) {
 
     }, [props.id]);
 
-    const handleEditOnClick = async (values) => {
+    // const handleEditOnClick = async (values) => {
+    //     try {
+    //         const res = await axiosInstance.put(`/fields/${props.id}`, values);
+    //         if (res.status === 200 || res.status === 202) {
+    //             props.enqueueSnackbar('Successfully updated field', { variant: 'success' });
 
-        try {
-            const res = await axiosInstance.put(`/fields/${props.id}`, values);
-            console.log(res)
-            if (res.status === 200 || res.status === 202) {
-                props.enqueueSnackbar('Successfully updated field', { variant: 'success' });
+    //         } else {
+    //             props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+    //         }
+    //         setOpen(false);
+    //     } catch (err) {
+    //         console.log(err);
+    //         props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+    //     }
 
-            } else {
-                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
-            }
-            setOpen(false);
-        } catch (err) {
-            console.log(err);
-            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
-        }
-
-    }
+    // }
 
     return (
         <Formik
@@ -117,7 +115,7 @@ function EditField(props) {
                         </form>
                     </DialogContent>
                     <DialogActions>
-                        <Button to={"/users"} color="primary" onClick={() => handleEditOnClick(values)}>
+                        <Button color="primary" onClick={() => props.handle(values)}>
                             Update
                         </Button>
                         <Button onClick={handleClose} color="primary">

@@ -2,7 +2,7 @@ import "./FieldList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
-import { axiosInstance } from "../../utils/axios";
+import { axiosInstance } from "../../utils/base";
 
 import EditField from './../EditField/EditField';
 import { withSnackbar } from "notistack";
@@ -25,13 +25,14 @@ function FieldList(props) {
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [showAddDialog, setShowAddDialog] = useState(false);
 
-    useEffect(function () {
-        async function loadDocuments() {
-            const res = await axiosInstance.get('/fields?limit=999&sort_type=asc');
-            if (res.data) {
-                setData(res.data);
-            }
+    async function loadDocuments() {
+        const res = await axiosInstance.get('/fields?limit=999&sort_type=asc');
+        if (res.data) {
+            setData(res.data);
         }
+    }
+
+    useEffect(function () {
         loadDocuments()
     }, []);
 
@@ -42,7 +43,7 @@ function FieldList(props) {
                 setData(data.filter((item) => item.id !== id));
                 props.enqueueSnackbar('Successfully deleted fields', { variant: 'success' });
             } else {
-                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+                props.enqueueSnackbar('Failed done the operation.' + res.data.message, { variant: 'error' });
             }
 
         } catch (err) {
@@ -94,6 +95,43 @@ function FieldList(props) {
         },
     ];
 
+    const handleEditOnClick = async (values) => {
+        try {
+            const res = await axiosInstance.put(`/fields/${editId}`, values);
+            if (res.status === 200 || res.status === 202) {
+                props.enqueueSnackbar('Successfully updated field', { variant: 'success' });
+                await loadDocuments();
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+            setShowEditDialog(false);
+        } catch (err) {
+            console.log(err);
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+
+    }
+
+    const handleAddOnClick = async (initialValues, values) => {
+
+        try {
+            let data = { ...initialValues, ...values }
+
+            const res = await axiosInstance.post(`/fields`, data);
+
+            if (res.status === 200 || res.status === 201) {
+                props.enqueueSnackbar('Successfully add field', { variant: 'success' });
+                await loadDocuments();
+            } else {
+                props.enqueueSnackbar('Failed done the operation.' + res.data.message, { variant: 'error' });
+            }
+            setShowAddDialog(false);
+        } catch (err) {
+            console.log(err);
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+    }
+
     return (
         <div className="fieldList">
             <h1>Field List</h1>
@@ -108,17 +146,14 @@ function FieldList(props) {
                 checkboxSelection
                 autoHeight={true}
             >
-
             </DataGrid>
 
-            {showEditDialog && <EditField id={editId} toggle={() => setShowEditDialog(false)} />}
-            {showAddDialog && <NewField toggle={() => setShowAddDialog(false)} />}
+            {showEditDialog && <EditField handle={handleEditOnClick} id={editId} toggle={() => setShowEditDialog(false)} />}
+            {showAddDialog && <NewField handle={handleAddOnClick} toggle={() => setShowAddDialog(false)} />}
 
 
         </div >
     );
-
-
 }
 
 export default withSnackbar(FieldList);
