@@ -186,6 +186,11 @@ function NewCourse(props) {
                                 helperText={errors.description}
                             />
 
+                            <label>Upload image</label>
+                            <input id="image" name="file" type="file" accept="image/*" onChange={(event) => {
+                                setFieldValue("image", event.currentTarget.files[0]);
+                            }} />
+
                         </form>
                     </DialogContent>
                     <DialogActions>

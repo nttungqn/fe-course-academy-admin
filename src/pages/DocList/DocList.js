@@ -109,7 +109,14 @@ function DocList(props) {
     const handleEditOnClick = async (values) => {
 
         try {
-            const res = await axiosInstance.put(`/documents/${editId}`, values);
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+            let fd = new FormData();
+            for (let key in values) {
+                if (values.hasOwnProperty(key)) {
+                    fd.append(key, values[key]);
+                }
+            }
+            const res = await axiosInstance.put(`/documents/${editId}`, fd, config);
             console.log(res)
             if (res.status === 200 || res.status === 202) {
                 props.enqueueSnackbar('Successfully updated document', { variant: 'success' });

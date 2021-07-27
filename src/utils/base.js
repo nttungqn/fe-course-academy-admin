@@ -5,7 +5,7 @@ export const axiosInstance = axios.create({
     timeout: 5000,
     headers: {
         'X-Access-Token': 'accessToken',
-        'Content-Type': 'application/x-www-form-urlencoded'
+        'Content-Type': 'Application/json'
     }
 })
 

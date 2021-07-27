@@ -122,9 +122,15 @@ function CourseList(props) {
     const handleAddOnClick = async (initialValues, values) => {
 
         try {
-            let data = { image: DEFAULT_COURSE_IMAGE, ...initialValues, ...values, last_update: moment().format('YYYY-MM-DD h:mm:ss') }
-            console.log(data);
-            const res = await axiosInstance.post(`/courses`, data);
+            let data = { ...initialValues, ...values, last_update: moment().format('YYYY-MM-DD h:mm:ss') }
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+            let fd = new FormData();
+            for (let key in data) {
+                if (data.hasOwnProperty(key)) {
+                    fd.append(key, data[key]);
+                }
+            }
+            const res = await axiosInstance.post(`/courses`, fd, config);
             if (res.status === 200 || res.status === 201) {
                 props.enqueueSnackbar('Successfully add course', { variant: 'success' });
                 await loadCourses();
@@ -142,8 +148,14 @@ function CourseList(props) {
     const handleEditOnClick = async (values) => {
 
         try {
-            const res = await axiosInstance.put(`/courses/${editId}`, values);
-            console.log(res)
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+            let fd = new FormData();
+            for (let key in values) {
+                if (values.hasOwnProperty(key)) {
+                    fd.append(key, values[key]);
+                }
+            }
+            const res = await axiosInstance.put(`/courses/${editId}`, fd, config);
             if (res.status === 200 || res.status === 202) {
                 props.enqueueSnackbar('Successfully updated course', { variant: 'success' });
                 await loadCourses();

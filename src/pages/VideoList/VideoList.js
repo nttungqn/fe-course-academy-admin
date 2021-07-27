@@ -108,7 +108,14 @@ function VideoList(props) {
     const handleEditOnClick = async (values) => {
 
         try {
-            const res = await axiosInstance.put(`/videos/${editId}`, values);
+            const config = { headers: { 'Content-Type': 'multipart/form-data' }, timeout: 10000 };
+            let fd = new FormData();
+            for (let key in values) {
+                if (values.hasOwnProperty(key)) {
+                    fd.append(key, values[key]);
+                }
+            }
+            const res = await axiosInstance.put(`/videos/${editId}`, fd, config);
             console.log(res)
             if (res.status === 200 || res.status === 202) {
                 props.enqueueSnackbar('Successfully updated video', { variant: 'success' });

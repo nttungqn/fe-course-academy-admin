@@ -128,18 +128,11 @@ function EditVideo(props) {
                                     </option>
                                 ))}
                             </TextField>
-
-                            <TextField
-                                fullWidth
-                                id="url"
-                                name="url"
-                                label="URL"
-                                multiline='true'
-                                value={values.url}
-                                onChange={handleChange}
-                                error={Boolean(errors.url)}
-                                helperText={errors.url}
-                            />
+                            <br />
+                            <label>Upload document</label>
+                            <input id="url" name="file" type="file" accept='.doc,.pdf,.txt' onChange={(event) => {
+                                setFieldValue("url", event.currentTarget.files[0]);
+                            }} />
 
                         </form>
                     </DialogContent>

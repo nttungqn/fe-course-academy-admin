@@ -109,7 +109,7 @@ function NewUser(props) {
             enableReinitialize={true}
             validationSchema={validationSchema}
         >
-            {({ values, errors, dirty, isValid, handleChange, handleReset }) => (
+            {({ values, errors, dirty, isValid, handleChange, handleReset, setFieldValue }) => (
                 <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
                     <DialogTitle id="form-dialog-title">Add New Teacher</DialogTitle>
                     <DialogContent>
@@ -206,6 +206,11 @@ function NewUser(props) {
                                 error={Boolean(errors.address)}
                                 helperText={errors.address}
                             />
+
+                            <label>Upload avatar</label>
+                            <input id="avatar" name="file" type="file" accept="image/*" onChange={(event) => {
+                                setFieldValue("avatar", event.currentTarget.files[0]);
+                            }} />
 
                         </form>
                     </DialogContent>

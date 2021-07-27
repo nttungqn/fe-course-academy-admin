@@ -67,7 +67,14 @@ function UserList(props) {
 
     const handleEditOnClick = async (values) => {
         try {
-            const res = await axiosInstance.put(`/users/${editId}`, values);
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+            let fd = new FormData();
+            for (let key in values) {
+                if (values.hasOwnProperty(key)) {
+                    fd.append(key, values[key]);
+                }
+            }
+            const res = await axiosInstance.put(`/users/${editId}`, fd, config);
             console.log(res)
             if (res.status === 200) {
                 props.enqueueSnackbar('Successfully updated user', { variant: 'success' });
@@ -92,7 +99,14 @@ function UserList(props) {
                 }
             })
             const data = { ...values, role_id: role_id }
-            const res = await axiosInstance.post(`/users`, data);
+            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
+            let fd = new FormData();
+            for (let key in data) {
+                if (data.hasOwnProperty(key)) {
+                    fd.append(key, data[key]);
+                }
+            }
+            const res = await axiosInstance.post(`/users/add-new-user`, fd, config);
 
             if (res.status === 201) {
                 props.enqueueSnackbar('Successfully created user', { variant: 'success' });
