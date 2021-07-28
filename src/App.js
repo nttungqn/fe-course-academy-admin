@@ -11,41 +11,27 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 
 import './App.css';
 import OrderList from './pages/OrderList/OrderList';
+import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
+import SignIn from './pages/SignIn/SignIn';
 
 function App() {
   return (
     <Router>
       <Switch >
-        <Route path='/login'><Dashboard /></Route>
+        <Route path='/signin'><SignIn /></Route>
       </Switch>
       <Topbar />
       <div className="container">
         <Sidebar />
         <Switch>
-          <Route exact path='/'>
-            <Dashboard />
-          </Route>
-          <Route path='/users'>
-            <UserList />
-          </Route>
-          <Route path='/courses'>
-            <CourseList />
-          </Route>
-          <Route path='/documents'>
-            <DocList />
-          </Route>
-          <Route path='/videos'>
-            <VideoList />
-          </Route>
-          <Route path='/categories'>
-            <CategoryList />
-          </Route>
-          <Route path='/fields'>
-            <FieldList />
-          </Route>
-          <Route path='/orders'>
-            <OrderList />
-          </Route>
+          <ProtectedRoute exact path='/' component={Dashboard} />
+          <ProtectedRoute exact path='/users' component={UserList} />
+          <ProtectedRoute exact path='/courses' component={CourseList} />
+          <ProtectedRoute exact path='/documents' component={DocList} />
+          <ProtectedRoute exact path='/videos' component={VideoList} />
+          <ProtectedRoute exact path='/categories' component={CategoryList} />
+          <ProtectedRoute exact path='/fields' component={FieldList} />
+          <ProtectedRoute exact path='/orders' component={OrderList} />
         </Switch>
       </div>
     </Router >

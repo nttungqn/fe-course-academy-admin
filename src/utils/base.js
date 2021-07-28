@@ -4,7 +4,7 @@ export const axiosInstance = axios.create({
     baseURL: 'http://localhost:5000/api',
     timeout: 5000,
     headers: {
-        'X-Access-Token': 'accessToken',
+        'X-Access-Token': localStorage.getItem('accessToken'),
         'Content-Type': 'Application/json'
     }
 })
