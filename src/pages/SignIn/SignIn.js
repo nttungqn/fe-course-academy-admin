@@ -8,7 +8,7 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 
-import { axiosInstance, parseJwt } from '../../utils/base';
+import { axiosInstance } from '../../utils/base';
 import { Formik } from 'formik';
 
 const useStyles = makeStyles((theme) => ({
@@ -38,24 +38,17 @@ export default function Login(props) {
     };
 
     const handleSubmit = async (values) => {
-        const { username, password } = values;
         try {
-            if (username === 'admin' && password === '123456') {
+            const res = await axiosInstance.post('/sign-in', values);
+            console.log(res);
+
+            if (res.data.authenticated || res.data.role === 3) {
+                localStorage.setItem('accessToken', res.data.accessToken);
+                axiosInstance.defaults.headers.common['Authorization'] = res.data.accessToken;
                 localStorage.setItem('isAuthenticated', true);
-                localStorage.setItem('accessToken', 'admin');
                 window.location.pathname = '/';
             } else {
-                const res = await axiosInstance.post('/sign-in', values);
-                if (res.data.authenticated) {
-                    localStorage.setItem('accessToken', res.data.accessToken);
-                    axiosInstance.defaults.headers.common['Authorization'] = res.data.accessToken;
-                    const obj = parseJwt(res.data.accessToken);
-                    localStorage.userId = obj.userId;
-
-                    window.location.pathname = '/';
-                } else {
-                    alert('Invalid login.');
-                }
+                alert('Invalid login.');
             }
         } catch (err) {
             if (err.response) {
