@@ -29,7 +29,7 @@ function DocList(props) {
         setLoadingBar(false);
         if (res.data) {
             let documents = res.data.map((el) => {
-                el['document']['course'] = el['course'];
+                el['document']['course_name'] = el['course']['name'];
                 delete el['course'];
                 return el['document'];
             });
@@ -68,24 +68,11 @@ function DocList(props) {
             field: "name",
             headerName: "Name",
             flex: 0.3,
-            renderCell: (params) => {
-                return (
-                    <div className="docListItem">
-                        {/* <img className="docListImg" src={params.row.image || DEFAULT_COURSE_IMAGE} alt="" /> */}
-                        {params.row.name}
-                    </div>
-                );
-            },
         },
         {
-            field: "course",
+            field: "course_name",
             headerName: "Course",
             flex: 0.2,
-            renderCell: (params) => {
-                return (
-                    <div>{params.row.course.name}</div>
-                );
-            }
         },
         {
             field: "url",

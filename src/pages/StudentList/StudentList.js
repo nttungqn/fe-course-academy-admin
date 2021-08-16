@@ -128,16 +128,6 @@ function StudentList(props) {
         },
         { field: "email", headerName: "Email", width: 200 },
         {
-            field: "role",
-            headerName: "Role",
-            flex: 0.15,
-            renderCell: (params) => {
-                return (
-                    <div>{params.row.role.name}</div>
-                );
-            }
-        },
-        {
             field: "address",
             headerName: "Address",
             flex: 0.3,

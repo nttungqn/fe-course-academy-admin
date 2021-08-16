@@ -29,6 +29,10 @@ function CategoryList(props) {
     async function loadCategories() {
         const res = await axiosInstance.get('/categories?limit=999&sort_type=asc');
         if (res.data) {
+            let data = res.data.map(el => {
+                el['last_update'] = moment(el['last_update']).format('YYYY-MM-DD')
+                return el;
+            })
             setData(res.data);
         }
     }
@@ -82,13 +86,7 @@ function CategoryList(props) {
             field: "last_update",
             headerName: "Last update",
             flex: 0.3,
-            renderCell: (params) => {
-                return (
-                    <div >
-                        {moment(params.row.last_update).format('YYYY-MM-DD')}
-                    </div>
-                );
-            },
+            type: 'date',
         },
         {
             field: "action",

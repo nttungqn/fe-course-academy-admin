@@ -31,8 +31,9 @@ function OrderList(props) {
             setLoadingBar(false);
             if (res.data.courseOrders) {
                 let orders = res.data.courseOrders.map((el) => {
-                    el['course_order']['user'] = el['user'];
-                    el['course_order']['course'] = el['course'];
+                    el['course_order']['user_fullname'] = el['user']['fullname'];
+                    el['course_order']['course_name'] = el['course']['name'];
+                    el['course_order']['enroll_at'] = moment(el['course_order']['enroll_at']).format('YYYY-MM-DD');
                     delete el['user'];
                     delete el['course']
                     return el['course_order'];
@@ -71,40 +72,19 @@ function OrderList(props) {
     const columns = [
         { field: "id", headerName: "ID", flex: 0.15 },
         {
-            field: "course",
+            field: "course_name",
             headerName: "Course",
             flex: 0.3,
-            renderCell: (params) => {
-                return (
-                    <div >
-                        {params.row.course.name}
-                    </div>
-                );
-            },
         },
         {
-            field: "user",
+            field: "user_fullname",
             headerName: "User",
             flex: 0.3,
-            renderCell: (params) => {
-                return (
-                    <div >
-                        {params.row.user.fullname}
-                    </div>
-                );
-            },
         },
         {
             field: "enroll_at",
             headerName: "Enroll at",
             flex: 0.3,
-            renderCell: (params) => {
-                return (
-                    <div >
-                        {moment(params.row.enroll_at).format('YYYY-MM-DD')}
-                    </div>
-                );
-            },
         },
         {
             field: "action",

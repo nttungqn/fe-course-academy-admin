@@ -77,13 +77,6 @@ function FieldList(props) {
             field: "name",
             headerName: "Name",
             flex: 0.3,
-            renderCell: (params) => {
-                return (
-                    <div className="fieldListItem">
-                        {params.row.name}
-                    </div>
-                );
-            },
         },
         {
             field: "action",

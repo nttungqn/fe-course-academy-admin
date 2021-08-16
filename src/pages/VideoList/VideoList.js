@@ -28,7 +28,7 @@ function VideoList(props) {
         setLoadingBar(false);
         if (res.data) {
             let videos = res.data.map((el) => {
-                el['video']['course'] = el['course'];
+                el['video']['course_name'] = el['course']['name'];
                 delete el['course'];
                 return el['video'];
             });
@@ -75,14 +75,9 @@ function VideoList(props) {
             },
         },
         {
-            field: "course",
+            field: "course_name",
             headerName: "Course",
             flex: 0.2,
-            renderCell: (params) => {
-                return (
-                    <div>{params.row.course.name}</div>
-                );
-            }
         },
         {
             field: "url",

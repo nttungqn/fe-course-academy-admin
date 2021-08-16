@@ -16,7 +16,7 @@ const useStyles = makeStyles({
 
     dataGrid: {
         width: "100%",
-        marginTop: '30px'
+        marginTop: '30px',
     },
 });
 
@@ -34,8 +34,10 @@ function CourseList(props) {
         setLoadingBar(false);
         if (res.data.courses) {
             let courses = res.data.courses.map((el) => {
-                el['course']['category'] = el['category'];
+                el['course']['category_name'] = el['category']['name'];
+                el['course']['created_by'] = el['user']['fullname'];
                 delete el['category'];
+                delete el['user'];
                 return el['course'];
             });
             setData(courses);
@@ -82,32 +84,26 @@ function CourseList(props) {
             },
         },
         {
-            field: "course",
-            headerName: "Course",
+            field: "name",
+            headerName: "Name",
             flex: 0.2,
-            renderCell: (params) => {
-                return (
-                    <div className="courseListItem">
-                        {params.row.name}
-                    </div>
-                );
-            },
         },
-        { field: "price", headerName: "Price", flex: 0.15 },
+        { field: "price", headerName: "Price", flex: 0.15, type: "number" },
         {
-            field: "category",
+            field: "created_by",
+            headerName: "Created by",
+            flex: 0.3,
+        },
+        {
+            field: "category_name",
             headerName: "Category",
-            flex: 0.45,
-            renderCell: (params) => {
-                return (
-                    <div>{params.row.category.name}</div>
-                );
-            }
+            flex: 0.3,
         },
         {
             field: "view",
             headerName: "View",
             flex: 0.15,
+            type: "number"
         },
         {
             field: "action",
