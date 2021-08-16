@@ -6,6 +6,7 @@ import { axiosInstance } from "../../utils/base";
 
 import EditDoc from './../EditDoc/EditDoc';
 import { withSnackbar } from "notistack";
+import CircularIndeterminate from "../../components/CircularIndeterminate/CircularIndeterminate";
 
 const useStyles = makeStyles({
 
@@ -20,9 +21,12 @@ function DocList(props) {
     const [data, setData] = useState([]);
     const [editId, setEditId] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
+    const [loadingBar, setLoadingBar] = useState(false);
 
     async function loadDocuments() {
+        setLoadingBar(true);
         const res = await axiosInstance.get('/documents?limit=999&sort_type=asc');
+        setLoadingBar(false);
         if (res.data) {
             let documents = res.data.map((el) => {
                 el['document']['course'] = el['course'];
@@ -38,7 +42,9 @@ function DocList(props) {
 
     const handleDelete = async (id) => {
         try {
+            setLoadingBar(true);
             const res = await axiosInstance.delete(`/documents/${id}`);
+            setLoadingBar(false);
             if (res.status === 200) {
                 setData(data.filter((item) => item.id !== id));
                 props.enqueueSnackbar('Successfully deleted documents', { variant: 'success' });
@@ -116,7 +122,9 @@ function DocList(props) {
                     fd.append(key, values[key]);
                 }
             }
+            setLoadingBar(true);
             const res = await axiosInstance.put(`/documents/${editId}`, fd, config);
+            setLoadingBar(false);
             console.log(res)
             if (res.status === 200 || res.status === 202) {
                 props.enqueueSnackbar('Successfully updated document', { variant: 'success' });
@@ -135,16 +143,18 @@ function DocList(props) {
     return (
         <div className="courseList">
             <h1>Document List</h1>
-            <DataGrid className={classes.dataGrid}
-                rows={data}
-                disableSelectionOnClick
-                columns={columns}
-                pageSize={8}
-                checkboxSelection
-                autoHeight={true}
-            >
+            {loadingBar ? <CircularIndeterminate /> :
+                <DataGrid className={classes.dataGrid}
+                    rows={data}
+                    disableSelectionOnClick
+                    columns={columns}
+                    pageSize={8}
+                    checkboxSelection
+                    autoHeight={true}
+                >
 
-            </DataGrid>
+                </DataGrid>
+            }
 
             {showEditDialog && <EditDoc handle={handleEditOnClick} id={editId} toggle={() => setShowEditDialog(false)} />}
 

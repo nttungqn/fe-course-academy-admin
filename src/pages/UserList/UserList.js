@@ -3,7 +3,7 @@ import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { axiosInstance } from "../../utils/base";
-
+import { DEFAULT_AVATAR } from "../../config";
 import EditUser from './../EditUser/EditUser';
 import NewUser from './../NewUser/NewUser';
 import { Button } from "@material-ui/core";
@@ -152,15 +152,10 @@ function UserList(props) {
     const columns = [
         { field: "id", headerName: "ID", flex: 0.15 },
         {
-            field: "user",
-            headerName: "User",
-            flex: 0.3,
+            field: "avatar", headerName: "Avatar", flex: 0.15,
             renderCell: (params) => {
                 return (
-                    <div className="userListItem">
-                        <img className="userListImg" src={params.row.avatar} alt="" />
-                        {params.row.fullname}
-                    </div>
+                    <img className="userListImg" src={params.row.avatar || DEFAULT_AVATAR} alt={params.row.fullname} />
                 );
             },
         },
@@ -178,7 +173,7 @@ function UserList(props) {
         {
             field: "address",
             headerName: "Address",
-            flex: 0.5,
+            flex: 0.3,
         },
         {
             field: "action",

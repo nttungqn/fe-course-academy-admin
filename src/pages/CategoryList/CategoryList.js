@@ -8,6 +8,7 @@ import moment from "moment";
 import EditCategory from './../EditCategory/EditCategory';
 import { Button } from "@material-ui/core";
 import NewCategory from "../NewCategory/NewCategory";
+import CircularIndeterminate from "../../components/CircularIndeterminate/CircularIndeterminate";
 
 const useStyles = makeStyles({
 
@@ -23,6 +24,7 @@ function CategoryList(props) {
     const [editId, setEditId] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [showAddDialog, setShowAddDialog] = useState(false);
+    const [loadingBar, setLoadingBar] = useState(false);
 
     async function loadCategories() {
         const res = await axiosInstance.get('/categories?limit=999&sort_type=asc');
@@ -37,7 +39,9 @@ function CategoryList(props) {
 
     const handleDelete = async (id) => {
         try {
+            setLoadingBar(true);
             const res = await axiosInstance.delete(`/categories/${id}`);
+            setLoadingBar(false);
             if (res.status === 200) {
                 setData(data.filter((item) => item.id !== id));
                 props.enqueueSnackbar('Successfully deleted category', { variant: 'success' });
@@ -107,9 +111,10 @@ function CategoryList(props) {
     ];
 
     const handleEditOnClick = async (values) => {
-
         try {
+            setLoadingBar(true);
             const res = await axiosInstance.put(`/categories/${editId}`, values);
+            setLoadingBar(false);
             console.log(res)
             if (res.status === 200 || res.status === 202) {
                 props.enqueueSnackbar('Successfully updated document', { variant: 'success' });
@@ -151,16 +156,18 @@ function CategoryList(props) {
             <Button className='buttonCreate' variant="contained" color="primary" onClick={() => handleCreate()}>
                 Create new category
             </Button>
-            <DataGrid className={classes.dataGrid}
-                rows={data}
-                disableSelectionOnClick
-                columns={columns}
-                pageSize={8}
-                checkboxSelection
-                autoHeight={true}
-            >
+            {loadingBar ? <CircularIndeterminate /> :
+                <DataGrid className={classes.dataGrid}
+                    rows={data}
+                    disableSelectionOnClick
+                    columns={columns}
+                    pageSize={8}
+                    checkboxSelection
+                    autoHeight={true}
+                >
 
-            </DataGrid>
+                </DataGrid>
+            }
             {showEditDialog && <EditCategory handle={handleEditOnClick} id={editId} toggle={() => setShowEditDialog(false)} />}
             {showAddDialog && <NewCategory handle={handleAddOnClick} toggle={() => setShowAddDialog(false)} />}
 

@@ -6,6 +6,7 @@ import { axiosInstance } from "../../utils/base";
 
 import { withSnackbar } from "notistack";
 import moment from "moment";
+import CircularIndeterminate from "../../components/CircularIndeterminate/CircularIndeterminate";
 
 const useStyles = makeStyles({
 
@@ -21,10 +22,13 @@ function OrderList(props) {
     // const [editId, setEditId] = useState(null);
     // const [showEditDialog, setShowEditDialog] = useState(false);
     // const [showAddDialog, setShowAddDialog] = useState(false);
+    const [loadingBar, setLoadingBar] = useState(false);
 
     useEffect(function () {
         async function loadNewMembers() {
+            setLoadingBar(true);
             const res = await axiosInstance.get('/orders?limit=999&sort_type=asc');
+            setLoadingBar(false);
             if (res.data.courseOrders) {
                 let orders = res.data.courseOrders.map((el) => {
                     el['course_order']['user'] = el['user'];
@@ -43,7 +47,9 @@ function OrderList(props) {
 
     const handleDelete = async (id) => {
         try {
+            setLoadingBar(true);
             const res = await axiosInstance.delete(`/orders/${id}`);
+            setLoadingBar(false);
             console.log(data)
             if (res.status === 200) {
                 props.enqueueSnackbar('Successfully deleted user', { variant: 'success' });
@@ -123,16 +129,18 @@ function OrderList(props) {
     return (
         <div className="orderList">
             <h1>Order List</h1>
-            <DataGrid className={classes.dataGrid}
-                rows={data}
-                disableSelectionOnClick
-                columns={columns}
-                pageSize={8}
-                checkboxSelection
-                autoHeight={true}
-            >
+            {loadingBar ? <CircularIndeterminate /> :
+                <DataGrid className={classes.dataGrid}
+                    rows={data}
+                    disableSelectionOnClick
+                    columns={columns}
+                    pageSize={8}
+                    checkboxSelection
+                    autoHeight={true}
+                >
 
-            </DataGrid>
+                </DataGrid>
+            }
             {/* <Dialog open={true} onClose={handleClose} aria-labelledby="form-dialog-title">
                 <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
                 <DialogContent>

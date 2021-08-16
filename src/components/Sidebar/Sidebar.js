@@ -44,13 +44,13 @@ export default function Sidebar() {
                         <Link to='/students' className="link">
                             <li className="sidebarListItem">
                                 <MenuBook className="sidebarIcon" />
-                                Students
+                                Student
                             </li>
                         </Link>
                         <Link to='/teachers' className="link">
                             <li className="sidebarListItem">
                                 <SupervisorAccount className="sidebarIcon" />
-                                Teachers
+                                Teacher
                             </li>
                         </Link>
                         {/* <Link to='/users/add-new-user' className="link">

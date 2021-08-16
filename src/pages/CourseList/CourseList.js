@@ -10,6 +10,7 @@ import { Button } from "@material-ui/core";
 import { DEFAULT_COURSE_IMAGE } from './../../config'
 import { withSnackbar } from "notistack";
 import moment from "moment";
+import CircularIndeterminate from "../../components/CircularIndeterminate/CircularIndeterminate";
 
 const useStyles = makeStyles({
 
@@ -25,9 +26,12 @@ function CourseList(props) {
     const [editId, setEditId] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
     const [showAddDialog, setShowAddDialog] = useState(false);
+    const [loadingBar, setLoadingBar] = useState(false);
 
     async function loadCourses() {
+        setLoadingBar(true);
         const res = await axiosInstance.get('/courses?limit=999&sort_type=asc');
+        setLoadingBar(false);
         if (res.data.courses) {
             let courses = res.data.courses.map((el) => {
                 el['course']['category'] = el['category'];
@@ -71,13 +75,19 @@ function CourseList(props) {
     const columns = [
         { field: "id", headerName: "ID", flex: 0.15 },
         {
+            field: "url", headerName: "Image", flex: 0.15, renderCell: (params) => {
+                return (
+                    <img className="courseListImg" src={params.row.image || DEFAULT_COURSE_IMAGE} alt="" />
+                );
+            },
+        },
+        {
             field: "course",
             headerName: "Course",
             flex: 0.2,
             renderCell: (params) => {
                 return (
                     <div className="courseListItem">
-                        <img className="courseListImg" src={params.row.image || DEFAULT_COURSE_IMAGE} alt="" />
                         {params.row.name}
                     </div>
                 );
@@ -177,16 +187,18 @@ function CourseList(props) {
             <Button className='buttonCreate' variant="contained" color="primary" onClick={() => handleCreate()}>
                 Create new course
             </Button>
-            <DataGrid className={classes.dataGrid}
-                rows={data}
-                disableSelectionOnClick
-                columns={columns}
-                pageSize={8}
-                checkboxSelection
-                autoHeight={true}
-            >
+            {loadingBar ? <CircularIndeterminate /> :
+                <DataGrid className={classes.dataGrid}
+                    rows={data}
+                    disableSelectionOnClick
+                    columns={columns}
+                    pageSize={8}
+                    checkboxSelection
+                    autoHeight={true}
+                >
 
-            </DataGrid>
+                </DataGrid>
+            }
 
             {showEditDialog && <EditCourse handle={handleEditOnClick} id={editId} toggle={() => setShowEditDialog(false)} />}
             {showAddDialog && <NewCourse handle={handleAddOnClick} toggle={() => setShowAddDialog(false)} />}

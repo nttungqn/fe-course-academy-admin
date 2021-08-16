@@ -5,6 +5,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { axiosInstance } from "../../utils/base";
 import { withSnackbar } from "notistack";
 import EditVideo from './../EditVideo/EditVideo';
+import CircularIndeterminate from "../../components/CircularIndeterminate/CircularIndeterminate";
 
 const useStyles = makeStyles({
 
@@ -19,9 +20,12 @@ function VideoList(props) {
     const [data, setData] = useState([]);
     const [editId, setEditId] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
+    const [loadingBar, setLoadingBar] = useState(false);
 
     async function loadVideos() {
+        setLoadingBar(true);
         const res = await axiosInstance.get('/videos?limit=999&sort_type=asc');
+        setLoadingBar(false);
         if (res.data) {
             let videos = res.data.map((el) => {
                 el['video']['course'] = el['course'];
@@ -134,16 +138,18 @@ function VideoList(props) {
     return (
         <div className="courseList">
             <h1>Video List</h1>
-            <DataGrid className={classes.dataGrid}
-                rows={data}
-                disableSelectionOnClick
-                columns={columns}
-                pageSize={8}
-                checkboxSelection
-                autoHeight={true}
-            >
+            {loadingBar ? <CircularIndeterminate /> :
+                <DataGrid className={classes.dataGrid}
+                    rows={data}
+                    disableSelectionOnClick
+                    columns={columns}
+                    pageSize={8}
+                    checkboxSelection
+                    autoHeight={true}
+                >
 
-            </DataGrid>
+                </DataGrid>
+            }
             {showEditDialog && <EditVideo handle={handleEditOnClick} id={editId} toggle={() => setShowEditDialog(false)} />}
 
 
