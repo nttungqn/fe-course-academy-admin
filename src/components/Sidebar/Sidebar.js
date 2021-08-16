@@ -8,7 +8,9 @@ import {
     LibraryBooks,
     Category,
     Class,
-    Cached
+    Cached,
+    MenuBook,
+    SupervisorAccount
 } from "@material-ui/icons";
 
 import { Link } from 'react-router-dom';
@@ -37,6 +39,18 @@ export default function Sidebar() {
                             <li className="sidebarListItem">
                                 <PermIdentity className="sidebarIcon" />
                                 User
+                            </li>
+                        </Link>
+                        <Link to='/students' className="link">
+                            <li className="sidebarListItem">
+                                <MenuBook className="sidebarIcon" />
+                                Students
+                            </li>
+                        </Link>
+                        <Link to='/teachers' className="link">
+                            <li className="sidebarListItem">
+                                <SupervisorAccount className="sidebarIcon" />
+                                Teachers
                             </li>
                         </Link>
                         {/* <Link to='/users/add-new-user' className="link">

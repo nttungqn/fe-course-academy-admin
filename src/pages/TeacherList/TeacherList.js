@@ -1,4 +1,4 @@
-import "./UserList.css";
+import "./TeacherList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
@@ -18,7 +18,7 @@ const useStyles = makeStyles({
     },
 });
 
-function UserList(props) {
+function TeacherList(props) {
     const classes = useStyles();
     const [data, setData] = useState([]);
     const [editId, setEditId] = useState(null);
@@ -28,7 +28,7 @@ function UserList(props) {
 
     async function loadUsers() {
         setLoadingBar(true)
-        const res = await axiosInstance.get('/users?limit=999&sort_type=asc');
+        const res = await axiosInstance.get('/users?role_id=1&limit=999&sort_type=asc');
         setLoadingBar(false)
         if (res.data.users) {
             let users = res.data.users.map((el) => {
@@ -206,7 +206,7 @@ function UserList(props) {
 
     return (
         <div className="userList">
-            <h1>User List</h1>
+            <h1>Teacher List</h1>
             <Button className='buttonCreate' variant="contained" color="primary" onClick={() => handleCreate()}>
                 Create new teacher
             </Button>
@@ -232,4 +232,4 @@ function UserList(props) {
 
 }
 
-export default withSnackbar(UserList);
+export default withSnackbar(TeacherList);

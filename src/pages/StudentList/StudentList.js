@@ -1,12 +1,10 @@
-import "./UserList.css";
+import "./StudentList.css";
 import { DataGrid } from "@material-ui/data-grid";
 import { useEffect, useState } from "react";
 import { makeStyles } from '@material-ui/core/styles';
 import { axiosInstance } from "../../utils/base";
 
 import EditUser from './../EditUser/EditUser';
-import NewUser from './../NewUser/NewUser';
-import { Button } from "@material-ui/core";
 import { withSnackbar } from "notistack";
 import CircularIndeterminate from "../../components/CircularIndeterminate/CircularIndeterminate";
 
@@ -18,17 +16,16 @@ const useStyles = makeStyles({
     },
 });
 
-function UserList(props) {
+function StudentList(props) {
     const classes = useStyles();
     const [data, setData] = useState([]);
     const [editId, setEditId] = useState(null);
     const [showEditDialog, setShowEditDialog] = useState(false);
-    const [showAddDialog, setShowAddDialog] = useState(false);
     const [loadingBar, setLoadingBar] = useState(false);
 
     async function loadUsers() {
         setLoadingBar(true)
-        const res = await axiosInstance.get('/users?limit=999&sort_type=asc');
+        const res = await axiosInstance.get('/users?role_id=2&limit=999&sort_type=asc');
         setLoadingBar(false)
         if (res.data.users) {
             let users = res.data.users.map((el) => {
@@ -86,11 +83,6 @@ function UserList(props) {
         setShowEditDialog(true);
     };
 
-    const handleCreate = () => {
-        console.log('Button clicked')
-        setShowAddDialog(true);
-    }
-
     const handleEditOnClick = async (values) => {
         try {
             const config = { headers: { 'Content-Type': 'multipart/form-data' } };
@@ -113,37 +105,6 @@ function UserList(props) {
             setShowEditDialog(false);
         } catch (err) {
             console.log(err);
-            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
-        }
-
-    }
-
-    const handleAddOnClick = async (values, roles) => {
-        try {
-            let role_id;
-            roles.forEach((role) => {
-                if (role.name.toLowerCase() === 'teacher') {
-                    role_id = role.id;
-                }
-            })
-            const data = { ...values, role_id: role_id }
-            const config = { headers: { 'Content-Type': 'multipart/form-data' } };
-            let fd = new FormData();
-            for (let key in data) {
-                if (data.hasOwnProperty(key)) {
-                    fd.append(key, data[key]);
-                }
-            }
-            const res = await axiosInstance.post(`/users/add-new-user`, fd, config);
-
-            if (res.status === 201) {
-                props.enqueueSnackbar('Successfully created user', { variant: 'success' });
-                await loadUsers();
-            } else {
-                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
-            }
-            setShowAddDialog(false);
-        } catch (err) {
             props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
         }
 
@@ -206,10 +167,7 @@ function UserList(props) {
 
     return (
         <div className="userList">
-            <h1>User List</h1>
-            <Button className='buttonCreate' variant="contained" color="primary" onClick={() => handleCreate()}>
-                Create new teacher
-            </Button>
+            <h1>Student List</h1>
             {loadingBar ? <CircularIndeterminate /> :
                 <DataGrid className={classes.dataGrid}
                     rows={data}
@@ -224,12 +182,10 @@ function UserList(props) {
             }
 
             {showEditDialog && <EditUser handle={handleEditOnClick} id={editId} toggle={() => setShowEditDialog(false)} />}
-            {showAddDialog && <NewUser handle={handleAddOnClick} toggle={() => setShowAddDialog(false)} />}
-
         </div >
     );
 
 
 }
 
-export default withSnackbar(UserList);
+export default withSnackbar(StudentList);

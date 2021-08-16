@@ -13,6 +13,8 @@ import './App.css';
 import OrderList from './pages/OrderList/OrderList';
 import ProtectedRoute from './components/ProtectedRoute/ProtectedRoute';
 import SignIn from './pages/SignIn/SignIn';
+import StudentList from './pages/StudentList/StudentList';
+import TeacherList from './pages/TeacherList/TeacherList';
 
 function App() {
   return (
@@ -26,6 +28,8 @@ function App() {
         <Switch>
           <ProtectedRoute exact path='/' component={Dashboard} />
           <ProtectedRoute exact path='/users' component={UserList} />
+          <ProtectedRoute exact path='/students' component={StudentList} />
+          <ProtectedRoute exact path='/teachers' component={TeacherList} />
           <ProtectedRoute exact path='/courses' component={CourseList} />
           <ProtectedRoute exact path='/documents' component={DocList} />
           <ProtectedRoute exact path='/videos' component={VideoList} />
