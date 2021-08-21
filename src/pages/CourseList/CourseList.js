@@ -49,21 +49,6 @@ function CourseList(props) {
         loadCourses();
     }, []);
 
-    const handleDelete = async (id) => {
-        try {
-            const res = await axiosInstance.delete(`/courses/${id}`);
-            if (res.status === 200) {
-                setData(data.filter((item) => item.id !== id));
-                props.enqueueSnackbar('Successfully deleted course', { variant: 'success' });
-            } else {
-                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
-            }
-
-        } catch (err) {
-            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
-        }
-    };
-
     const handleEdit = (id) => {
         setEditId(id);
         setShowEditDialog(true);
@@ -73,6 +58,44 @@ function CourseList(props) {
 
         setShowAddDialog(true);
     }
+
+    const handleBlock = async (id) => {
+        try {
+            setLoadingBar(true)
+            const res = await axiosInstance.delete(`/courses/${id}`);
+            setLoadingBar(false)
+            console.log(data)
+            if (res.status === 200) {
+                // setData(data.filter((item) => item.id !== id));
+                await loadCourses();
+                props.enqueueSnackbar('Successfully disable course', { variant: 'success' });
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+
+        } catch (err) {
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+    };
+
+    const handleUnblock = async (id) => {
+        try {
+            setLoadingBar(true)
+            const res = await axiosInstance.put(`/courses/${id}`, { is_delete: false });
+            setLoadingBar(false)
+            console.log(data)
+            if (res.status === 200) {
+                // setData(data.filter((item) => item.id !== id));
+                await loadCourses();
+                props.enqueueSnackbar('Successfully enable course', { variant: 'success' });
+            } else {
+                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+            }
+
+        } catch (err) {
+            props.enqueueSnackbar('Failed done the operation', { variant: 'error' });
+        }
+    };
 
     const columns = [
         { field: "id", headerName: "ID", flex: 0.15 },
@@ -116,9 +139,12 @@ function CourseList(props) {
                             onClick={() => handleEdit(params.row.id)}>Edit
                         </button>
 
-                        <button className="buttonDelete" variant="contained"
-                            onClick={() => handleDelete(params.row.id)}>Delete
-                        </button>
+                        {params.row.is_delete === 0
+                            ? <button className="buttonDelete" variant="contained"
+                                onClick={() => handleBlock(params.row.id)}>Disable
+                            </button> : <button className="buttonUnblock" variant="contained"
+                                onClick={() => handleUnblock(params.row.id)}>Enable
+                            </button>}
                     </>
                 );
             },
@@ -141,7 +167,8 @@ function CourseList(props) {
                 props.enqueueSnackbar('Successfully add course', { variant: 'success' });
                 await loadCourses();
             } else {
-                props.enqueueSnackbar('Failed done the operation.', { variant: 'error' });
+                console.log(res)
+                props.enqueueSnackbar('Failed done the operation.' + res.toString(), { variant: 'error' });
             }
             setShowAddDialog(false);
         } catch (err) {

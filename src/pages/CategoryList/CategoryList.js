@@ -33,7 +33,7 @@ function CategoryList(props) {
                 el['last_update'] = moment(el['last_update']).format('YYYY-MM-DD')
                 return el;
             })
-            setData(res.data);
+            setData(data);
         }
     }
 
