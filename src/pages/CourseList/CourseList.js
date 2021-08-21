@@ -102,7 +102,7 @@ function CourseList(props) {
         {
             field: "url", headerName: "Image", flex: 0.15, renderCell: (params) => {
                 return (
-                    <img className="courseListImg" src={params.row.image || DEFAULT_COURSE_IMAGE} alt="" />
+                    <img className="courseListImg" src={params.row.image !== "null" ? (params.row.image || DEFAULT_COURSE_IMAGE) : DEFAULT_COURSE_IMAGE} alt={params.row.name} />
                 );
             },
         },
@@ -135,9 +135,12 @@ function CourseList(props) {
             renderCell: (params) => {
                 return (
                     <>
-                        <button className="buttonEdit" variant="contained"
-                            onClick={() => handleEdit(params.row.id)}>Edit
-                        </button>
+                        {params.row.is_delete === 0 ?
+                            <button className="buttonEdit" variant="contained"
+                                onClick={() => handleEdit(params.row.id)}>Edit
+                            </button> : <button className="buttonEdit" variant="contained" disabled
+                                onClick={() => handleEdit(params.row.id)}>Edit
+                            </button>}
 
                         {params.row.is_delete === 0
                             ? <button className="buttonDelete" variant="contained"

@@ -156,7 +156,7 @@ function TeacherList(props) {
             field: "avatar", headerName: "Avatar", flex: 0.15,
             renderCell: (params) => {
                 return (
-                    <img className="userListImg" src={params.row.avatar || DEFAULT_AVATAR} alt={params.row.fullname} />
+                    <img className="userListImg" src={params.row.avatar !== "null" ? (params.row.avatar || DEFAULT_AVATAR) : DEFAULT_AVATAR} alt={params.row.fullname} />
                 );
             },
         },
@@ -178,9 +178,15 @@ function TeacherList(props) {
             renderCell: (params) => {
                 return (
                     <>
-                        <button className="buttonEdit" variant="contained"
-                            onClick={() => handleEdit(params.row.id)}>Edit
-                        </button>
+                        {params.row.is_delete.data[0] === 0 ?
+                            <button className="buttonEdit" variant="contained"
+                                onClick={() => handleEdit(params.row.id)}>Edit
+                            </button>
+                            :
+                            <button className="buttonEdit" variant="contained" disabled
+                                onClick={() => handleEdit(params.row.id)}>Edit
+                            </button>
+                        }
 
                         {params.row.is_delete.data[0] === 0
                             ? <button className="buttonDelete" variant="contained"

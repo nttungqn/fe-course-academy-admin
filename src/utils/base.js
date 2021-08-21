@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const axiosInstance = axios.create({
-    baseURL: 'http://localhost:5000/api',
+    baseURL: process.env.BE_URL || 'http://localhost:5000/api',
     timeout: 5000,
     headers: {
         'Authorization': localStorage.getItem('accessToken'),

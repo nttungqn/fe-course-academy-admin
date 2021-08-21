@@ -69,7 +69,7 @@ function FieldList(props) {
         {
             field: "url", headerName: "Image", flex: 0.15, renderCell: (params) => {
                 return (
-                    <img className="courseListImg" src={params.row.image || DEFAULT_COURSE_IMAGE} alt="" />
+                    <img className="courseListImg" src={params.row.image !== "null" ? (params.row.image || DEFAULT_COURSE_IMAGE) : DEFAULT_COURSE_IMAGE} alt="" />
                 );
             },
         },

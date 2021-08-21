@@ -1,7 +1,7 @@
 import "./Sidebar.css";
 import {
     // Add,
-    PermIdentity,
+    // PermIdentity,
     Dashboard,
     VideoLibrary,
     Assignment,
@@ -25,7 +25,7 @@ export default function Sidebar() {
                     <h3 className="sidebarTitle">Dashboard</h3>
                     <ul className="sidebarList">
                         <Link to='/' className="link">
-                            <li className="sidebarListItem active">
+                            <li className="sidebarListItem">
                                 <Dashboard className="sidebarIcon" />
                                 Dashboard
                             </li>
@@ -35,12 +35,12 @@ export default function Sidebar() {
                 <div className="sidebarMenu">
                     <h3 className="sidebarTitle">Management</h3>
                     <ul className="sidebarList">
-                        <Link to='/users' className="link">
+                        {/* <Link to='/users' className="link">
                             <li className="sidebarListItem">
                                 <PermIdentity className="sidebarIcon" />
                                 User
                             </li>
-                        </Link>
+                        </Link> */}
                         <Link to='/students' className="link">
                             <li className="sidebarListItem">
                                 <MenuBook className="sidebarIcon" />
